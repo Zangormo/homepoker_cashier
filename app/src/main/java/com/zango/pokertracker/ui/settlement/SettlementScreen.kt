@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -423,10 +424,12 @@ private fun NotesBlock(notes: List<UiText>, isProblem: Boolean) {
 
 @Composable
 private fun ShareBar(onShare: () -> Unit, onCopy: () -> Unit) {
+    // The surface runs on under the navigation bar, while the buttons are padded clear of it.
     Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .navigationBarsPadding()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {

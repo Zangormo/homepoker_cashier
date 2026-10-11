@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -155,7 +156,13 @@ fun CreateGameScreen(
             )
         },
         bottomBar = {
-            Column {
+            // Padded clear of the navigation bar as a whole: with an ad shown, that leaves the ad's
+            // own padding nothing to add; without one, it keeps "Start game" off the system bar.
+            Column(
+                Modifier
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
+                    .navigationBarsPadding(),
+            ) {
                 StartGameBar(
                     state = state,
                     onStart = {
