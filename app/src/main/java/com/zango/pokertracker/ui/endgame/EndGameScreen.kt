@@ -2,6 +2,7 @@ package com.zango.pokertracker.ui.endgame
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,6 +39,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -230,9 +233,12 @@ private fun ReconciliationPanel(summary: ReconciliationSummary) {
                 color = headlineColor,
             )
 
-            Row(
+            // A row that wraps: on a narrow phone the difference, chips and cash together, moves
+            // to a line of its own instead of being squeezed until its digits break across lines.
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = SpaceBetweenWithGap,
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     SectionLabel(stringResource(R.string.end_bought_in))
@@ -242,10 +248,9 @@ private fun ReconciliationPanel(summary: ReconciliationSummary) {
                     SectionLabel(stringResource(R.string.end_counted))
                     ChipAmountText(summary.countedChips, style = PokerTheme.type.numericMedium)
                 }
-                Column(
-                    horizontalAlignment = Alignment.End,
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
-                ) {
+                // Start-aligned like the other two: when it wraps onto a line of its own, an
+                // end-aligned label would hang over the right of the figures.
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     SectionLabel(stringResource(R.string.end_difference))
                     if (summary.hasDiscrepancy) {
                         ChipsToCashRow(
@@ -268,6 +273,22 @@ private fun ReconciliationPanel(summary: ReconciliationSummary) {
             }
         }
     }
+}
+
+/**
+ * Spread out like [Arrangement.SpaceBetween], but never closer than 16dp. FlowRow wraps on the
+ * arrangement's spacing, and SpaceBetween's is zero, so without this the three figures would only
+ * wrap once they already touched - which is how "Bought in" and "Counted" ran into each other.
+ */
+private val SpaceBetweenWithGap = object : Arrangement.Horizontal {
+    override val spacing = 16.dp
+
+    override fun Density.arrange(
+        totalSize: Int,
+        sizes: IntArray,
+        layoutDirection: LayoutDirection,
+        outPositions: IntArray,
+    ) = with(Arrangement.SpaceBetween) { arrange(totalSize, sizes, layoutDirection, outPositions) }
 }
 
 @Composable

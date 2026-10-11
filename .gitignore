@@ -42,3 +42,4 @@ Thumbs.db
 *.pepk
 *.p12
 *.pem
+/.claude/notify-done.ps1

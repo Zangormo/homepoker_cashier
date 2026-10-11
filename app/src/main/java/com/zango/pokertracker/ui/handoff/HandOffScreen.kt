@@ -6,12 +6,17 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -50,6 +55,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -169,6 +175,12 @@ fun HandOffScreen(
     }
 }
 
+/**
+ * The code has to be on screen whole to be scanned, so it is never taller than the window: a
+ * landscape window puts it beside the text and buttons, sized to the height, rather than above
+ * them at the full width, where it ran off the bottom. Elsewhere the column is kept to
+ * [MaxContentWidth], so on a tablet the code stays a size the other phone can frame.
+ */
 @Composable
 private fun HandOffContent(
     gameName: String,
@@ -178,76 +190,128 @@ private fun HandOffContent(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 24.dp, vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+    BoxWithConstraints(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.TopCenter,
     ) {
-        Text(gameName, style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
-
-        if (fitsInQrCode) {
-            val qr by produceState<ImageBitmap?>(initialValue = null, payload) {
-                value = withContext(Dispatchers.Default) { qrCode(payload) }
-            }
-            // Always black on white, whatever the theme: scanners read dark modules on a light
-            // ground, and the quiet zone round the code is part of what they look for.
-            Surface(
+        if (fitsInQrCode && maxWidth > maxHeight) {
+            // Half the width at most, so the column beside it keeps room for its buttons.
+            val qrSide = min(maxHeight - 32.dp, (maxWidth - 72.dp) / 2)
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.onSurface,
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(contentAlignment = Alignment.Center) {
-                    qr?.let {
-                        Image(
-                            bitmap = it,
-                            contentDescription = stringResource(R.string.handoff_qr_description),
-                            filterQuality = FilterQuality.None,
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    } ?: CircularProgressIndicator()
+                QrCode(payload, Modifier.size(qrSide))
+                Column(
+                    modifier = Modifier
+                        .weight(1f, fill = false)
+                        .widthIn(max = MaxContentWidth)
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    HandOffDetails(gameName, fitsInQrCode, onSendFile, onDone)
                 }
             }
-            Text(
-                stringResource(R.string.handoff_instructions),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-            )
         } else {
-            Text(
-                stringResource(R.string.handoff_too_big),
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
-            )
+            Column(
+                modifier = Modifier
+                    .widthIn(max = MaxContentWidth)
+                    .fillMaxHeight()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
+                Text(gameName, style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
+                if (fitsInQrCode) QrCode(payload, Modifier.fillMaxWidth().aspectRatio(1f))
+                HandOffDetails(gameName = null, fitsInQrCode, onSendFile, onDone)
+            }
         }
+    }
+}
 
-        if (fitsInQrCode) {
-            OutlinedButton(
-                onClick = onSendFile,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(MinTouchTarget),
-            ) { Text(stringResource(R.string.handoff_send_file_instead)) }
-        } else {
-            Button(
-                onClick = onSendFile,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(MinTouchTarget),
-            ) { Text(stringResource(R.string.handoff_send_file)) }
+/** Wide enough for any phone's code to fill it, narrow enough to stay framable from another phone. */
+private val MaxContentWidth = 480.dp
+
+@Composable
+private fun QrCode(payload: String, modifier: Modifier = Modifier) {
+    val qr by produceState<ImageBitmap?>(initialValue = null, payload) {
+        value = withContext(Dispatchers.Default) { qrCode(payload) }
+    }
+    // Always black on white, whatever the theme: scanners read dark modules on a light
+    // ground, and the quiet zone round the code is part of what they look for.
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.onSurface,
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            qr?.let {
+                Image(
+                    bitmap = it,
+                    contentDescription = stringResource(R.string.handoff_qr_description),
+                    filterQuality = FilterQuality.None,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            } ?: CircularProgressIndicator()
         }
-        Button(
-            onClick = onDone,
+    }
+}
+
+/**
+ * Everything but the code: the game's name (left out when the caller has already put it above
+ * the code), what to do with it, and the buttons.
+ */
+@Composable
+private fun HandOffDetails(
+    gameName: String?,
+    fitsInQrCode: Boolean,
+    onSendFile: () -> Unit,
+    onDone: () -> Unit,
+) {
+    if (gameName != null) {
+        Text(gameName, style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
+    }
+    if (fitsInQrCode) {
+        Text(
+            stringResource(R.string.handoff_instructions),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+    } else {
+        Text(
+            stringResource(R.string.handoff_too_big),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+        )
+    }
+
+    if (fitsInQrCode) {
+        OutlinedButton(
+            onClick = onSendFile,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(MinTouchTarget),
-        ) { Text(stringResource(R.string.handoff_done)) }
+        ) { Text(stringResource(R.string.handoff_send_file_instead)) }
+    } else {
+        Button(
+            onClick = onSendFile,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(MinTouchTarget),
+        ) { Text(stringResource(R.string.handoff_send_file)) }
     }
+    Button(
+        onClick = onDone,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(MinTouchTarget),
+    ) { Text(stringResource(R.string.handoff_done)) }
 }
 
 private const val QR_BLACK = 0xFF000000.toInt()

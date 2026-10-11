@@ -197,6 +197,8 @@ android {
     testOptions {
         unitTests {
             isReturnDefaultValues = true
+            // Robolectric needs the real resources to draw the screens in ResponsiveScreensTest.
+            isIncludeAndroidResources = true
         }
     }
 }
@@ -209,6 +211,17 @@ tasks.register("verifyRelease") {
     group = "verification"
     description = "Runs release unit tests and lint, then builds the minified release bundle."
     dependsOn("testReleaseUnitTest", "lintRelease", "bundleRelease")
+}
+
+// ResponsiveScreensTest draws every screen at a dozen window sizes and takes a few minutes, so it
+// stays out of ordinary test runs. Run it on its own, the way DevTools' responsive mode is used:
+//   ./gradlew :app:testDebugUnitTest --tests "*ResponsiveScreensTest*" -Presponsive
+// and open app/build/responsive/index.html.
+val runResponsive = project.hasProperty("responsive")
+tasks.withType<Test>().configureEach {
+    if (!runResponsive) exclude("**/ResponsiveScreensTest*")
+    // Keeps the gallery from going stale: the test always runs again when asked for.
+    if (runResponsive) outputs.upToDateWhen { false }
 }
 
 // Fails any release build when a real AdMob ID is missing, rather than configuration failing for
@@ -272,6 +285,12 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.ui.test.junit4)
+    testImplementation(libs.hilt.android.testing)
+    kspTest(libs.hilt.compiler)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
