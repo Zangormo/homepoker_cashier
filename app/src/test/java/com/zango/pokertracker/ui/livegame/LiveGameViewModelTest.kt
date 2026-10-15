@@ -67,6 +67,7 @@ class LiveGameViewModelTest {
         repository = repository,
         clock = clock,
         firetruckStore = firetruckStore,
+        bombPotVibration = {},
         savedStateHandle = SavedStateHandle(mapOf("gameId" to GAME_ID)),
     )
 

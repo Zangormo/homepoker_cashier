@@ -515,7 +515,7 @@
 
     <string name="create_section_side_games">Extras</string>
     <string name="create_section_side_games_subtitle">Optionale Extras für den Abend. Sie erscheinen im Tab Spiel.</string>
-    <string name="create_bomb_pot_hint">Ein Timer ruft in festen Abständen einen Bomb Pot aus – mit Benachrichtigung, wenn die App geschlossen ist.</string>
+    <string name="create_bomb_pot_hint">Ein Timer auf dem Spielbildschirm ruft in festen Abständen einen Bomb Pot aus, solange die App geöffnet ist.</string>
     <string name="create_bomb_pot_minutes">Alle, in Minuten</string>
     <string name="create_firetruck_hint">Tippe bei jedem Pot auf den Gewinner. Dreimal hintereinander ist ein Feuerwehrauto.</string>
     <string name="error_bomb_pot_required">Gib an, wie viele Minuten zwischen den Bomb Pots liegen</string>
@@ -530,17 +530,12 @@
         <item quantity="other">Alle %1$d Minuten</item>
     </plurals>
     <string name="live_bomb_pot_stopped">Das Spiel ist beendet, daher ist der Timer gestoppt.</string>
-    <string name="live_bomb_pot_inexact">Während das Handy ruht, kann Android die Bomb-Pot-Meldung ein paar Minuten zu spät zustellen.</string>
-    <string name="live_bomb_pot_allow_exact">Genaue Wecker erlauben</string>
     <string name="live_firetruck_hint">Tippe auf den Gewinner des Pots. Gewinnt jemand anderes, werden die Punkte gelöscht; dreimal hintereinander ist ein Feuerwehrauto.</string>
     <string name="live_firetruck_row_description">%1$s, %2$d von %3$d hintereinander</string>
 
     <string name="bomb_pot_announcement">Bomb Pot!</string>
-    <string name="bomb_pot_notification_text">Bring Würze ins Spiel!</string>
     <string name="firetruck_announcement">Feuerwehrauto!</string>
     <string name="announcement_tap_to_close">Zum Schließen irgendwo tippen</string>
-    <string name="bomb_pot_channel_name">Bomb Pots</string>
-    <string name="bomb_pot_channel_description">Meldet einen fälligen Bomb Pot, während die App geschlossen ist.</string>
 
     <!-- Random seating -->
     <string name="create_random_seating">Zufällige Sitzordnung</string>

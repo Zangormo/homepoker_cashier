@@ -536,7 +536,7 @@
 
     <string name="create_section_side_games">Jeux en plus</string>
     <string name="create_section_side_games_subtitle">Des extras facultatifs pour la soirée. Ils apparaissent dans l’onglet Jeu.</string>
-    <string name="create_bomb_pot_hint">Un minuteur annonce un bomb pot à intervalles réguliers, avec une notification si l’application est fermée.</string>
+    <string name="create_bomb_pot_hint">Un minuteur sur l’écran de la partie annonce un bomb pot à intervalles réguliers tant que l’application est ouverte.</string>
     <string name="create_bomb_pot_minutes">Toutes les, en minutes</string>
     <string name="create_firetruck_hint">Appuyez sur le gagnant de chaque pot. Trois d’affilée, c’est un camion de pompiers.</string>
     <string name="error_bomb_pot_required">Indiquez combien de minutes séparent les bomb pots</string>
@@ -552,17 +552,12 @@
         <item quantity="other">Toutes les %1$d minutes</item>
     </plurals>
     <string name="live_bomb_pot_stopped">La partie est terminée, le minuteur est donc arrêté.</string>
-    <string name="live_bomb_pot_inexact">Quand le téléphone est en veille, Android peut prévenir du bomb pot avec quelques minutes de retard.</string>
-    <string name="live_bomb_pot_allow_exact">Autoriser les alarmes exactes</string>
     <string name="live_firetruck_hint">Appuyez sur le gagnant du pot. Si quelqu’un d’autre gagne, les points s’effacent ; trois d’affilée, c’est un camion de pompiers.</string>
     <string name="live_firetruck_row_description">%1$s, %2$d sur %3$d d’affilée</string>
 
     <string name="bomb_pot_announcement">Bomb pot !</string>
-    <string name="bomb_pot_notification_text">Pimentez la partie !</string>
     <string name="firetruck_announcement">Camion de pompiers !</string>
     <string name="announcement_tap_to_close">Appuyez n’importe où pour fermer</string>
-    <string name="bomb_pot_channel_name">Bomb pots</string>
-    <string name="bomb_pot_channel_description">Vous prévient qu’un bomb pot arrive pendant que l’application est fermée.</string>
 
     <!-- Random seating -->
     <string name="create_random_seating">Placement aléatoire des joueurs</string>

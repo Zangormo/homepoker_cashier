@@ -57,11 +57,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zango.pokertracker.BuildConfig
 import com.zango.pokertracker.R
-import com.zango.pokertracker.bombpot.BombPotPresence
 import com.zango.pokertracker.core.text.UiText
 import com.zango.pokertracker.core.money.ChipRate
 import com.zango.pokertracker.core.money.Chips
@@ -109,15 +107,6 @@ fun LiveGameScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     val context = LocalContext.current
-
-    // While this game is on screen it announces its own bomb pots, so the alarm keeps quiet.
-    LifecycleResumeEffect(state.gameId) {
-        val gameId = state.gameId
-        BombPotPresence.visibleGameId = gameId
-        onPauseOrDispose {
-            if (BombPotPresence.visibleGameId == gameId) BombPotPresence.visibleGameId = null
-        }
-    }
 
     LaunchedEffect(viewModel) {
         viewModel.events.collect { event ->

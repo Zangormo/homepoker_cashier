@@ -12,19 +12,24 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Buzzes the phone when a bomb pot is due, whether the app is on screen, in the background or not
- * running at all.
+ * Buzzes the phone as the live game screen announces a bomb pot, since that is exactly the moment
+ * the host has put the phone down on the table.
  *
- * Driven by the bomb pot alarm itself rather than left to the notification: the notification is
- * skipped while the game's own screen is showing, is silent if notifications were refused, and its
- * channel's vibration cannot be changed on phones that already created it. Marked as an alarm
- * vibration, which Android lets through from the background and which follows the phone's alarm
- * settings rather than its ringer, the same way an alarm clock buzzes on a silenced phone.
+ * Only while the game is open: bomb pots are announced in the app and nowhere else. Alarms and
+ * notifications were tried for a closed app and dropped, as Android delivered them too far off the
+ * minute to be worth having. Marked as an alarm vibration, which follows the phone's alarm settings
+ * rather than its ringer, the same way an alarm clock buzzes on a silenced phone.
+ *
+ * An interface so the live game's view model can be tested on the JVM, where there is no vibrator.
  */
+fun interface BombPotVibration {
+    fun buzz()
+}
+
 @Singleton
-class BombPotVibration @Inject constructor(
+class SystemBombPotVibration @Inject constructor(
     @ApplicationContext private val context: Context,
-) {
+) : BombPotVibration {
     private val vibrator: Vibrator? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             context.getSystemService(VibratorManager::class.java)?.defaultVibrator
@@ -32,7 +37,7 @@ class BombPotVibration @Inject constructor(
             context.getSystemService(Vibrator::class.java)
         }
 
-    fun buzz() {
+    override fun buzz() {
         val vibrator = vibrator?.takeIf { it.hasVibrator() } ?: return
         val effect = VibrationEffect.createWaveform(PATTERN, NO_REPEAT)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

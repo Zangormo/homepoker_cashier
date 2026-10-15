@@ -1,9 +1,5 @@
 package com.zango.pokertracker.ui.livegame
 
-import android.app.AlarmManager
-import android.content.Intent
-import android.os.Build
-import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +9,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,26 +21,17 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
-import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.zango.pokertracker.R
-import com.zango.pokertracker.ui.common.MinTouchTarget
 import com.zango.pokertracker.ui.common.SectionLabel
 import com.zango.pokertracker.ui.theme.PokerTheme
 import com.zango.pokertracker.ui.theme.PokerTrackerTheme
@@ -164,44 +150,7 @@ private fun BombPotPanel(bombPot: BombPotUi) {
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            if (bombPot.isRunning) ExactAlarmHint()
         }
-    }
-}
-
-/**
- * Android 12 and later can hold exact alarms back until the host allows them, and an idle phone
- * then delivers the bomb pot alert late. Offered only when that is the case, and checked again
- * whenever the screen comes back, which is how the host returns from the settings page.
- */
-@Composable
-private fun ExactAlarmHint() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
-    val context = LocalContext.current
-    var allowed by remember { mutableStateOf(true) }
-    LifecycleResumeEffect(context) {
-        allowed = context.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()
-        onPauseOrDispose { }
-    }
-    if (allowed) return
-
-    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-        Text(
-            stringResource(R.string.live_bomb_pot_inexact),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        TextButton(
-            onClick = {
-                context.startActivity(
-                    Intent(
-                        Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
-                        "package:${context.packageName}".toUri(),
-                    ),
-                )
-            },
-            modifier = Modifier.height(MinTouchTarget),
-        ) { Text(stringResource(R.string.live_bomb_pot_allow_exact)) }
     }
 }
 

@@ -154,6 +154,7 @@ class NameLimitTest {
             repository = repository,
             clock = com.zango.pokertracker.testing.TestClock(),
             firetruckStore = com.zango.pokertracker.testing.FakeFiretruckStore(),
+            bombPotVibration = {},
             savedStateHandle = SavedStateHandle(mapOf("gameId" to GAME_ID)),
         )
         viewModel.uiState.first { !it.isLoading }
@@ -180,6 +181,7 @@ class NameLimitTest {
             repository = repository,
             clock = com.zango.pokertracker.testing.TestClock(),
             firetruckStore = com.zango.pokertracker.testing.FakeFiretruckStore(),
+            bombPotVibration = {},
             savedStateHandle = SavedStateHandle(mapOf("gameId" to GAME_ID)),
         )
         viewModel.uiState.first { !it.isLoading }

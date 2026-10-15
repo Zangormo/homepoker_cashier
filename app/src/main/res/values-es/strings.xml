@@ -536,7 +536,7 @@
 
     <string name="create_section_side_games">Juegos extra</string>
     <string name="create_section_side_games_subtitle">Extras opcionales para la noche. Aparecen en la pestaña Juego.</string>
-    <string name="create_bomb_pot_hint">Un temporizador anuncia un bomb pot cada cierto tiempo, con una notificación si la app está cerrada.</string>
+    <string name="create_bomb_pot_hint">Un temporizador en la pantalla de la partida anuncia un bomb pot cada cierto tiempo mientras la app está abierta.</string>
     <string name="create_bomb_pot_minutes">Cada cuántos minutos</string>
     <string name="create_firetruck_hint">Toca a quien gane cada bote. Tres seguidos es un camión de bomberos.</string>
     <string name="error_bomb_pot_required">Indica cada cuántos minutos hay bomb pot</string>
@@ -552,17 +552,12 @@
         <item quantity="other">Cada %1$d minutos</item>
     </plurals>
     <string name="live_bomb_pot_stopped">La partida ha terminado, así que el temporizador se ha parado.</string>
-    <string name="live_bomb_pot_inexact">Mientras el teléfono está inactivo, Android puede avisar del bomb pot con unos minutos de retraso.</string>
-    <string name="live_bomb_pot_allow_exact">Permitir alarmas exactas</string>
     <string name="live_firetruck_hint">Toca a quien gane el bote. Si gana otro, los puntos se borran; tres seguidos es un camión de bomberos.</string>
     <string name="live_firetruck_row_description">%1$s, %2$d de %3$d seguidos</string>
 
     <string name="bomb_pot_announcement">¡Bomb pot!</string>
-    <string name="bomb_pot_notification_text">¡Dale picante a la partida!</string>
     <string name="firetruck_announcement">¡Camión de bomberos!</string>
     <string name="announcement_tap_to_close">Toca en cualquier sitio para cerrar</string>
-    <string name="bomb_pot_channel_name">Bomb pots</string>
-    <string name="bomb_pot_channel_description">Te avisa de que toca bomb pot mientras la app está cerrada.</string>
 
     <!-- Random seating -->
     <string name="create_random_seating">Orden aleatorio de jugadores</string>

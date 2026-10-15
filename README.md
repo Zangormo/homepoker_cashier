@@ -44,7 +44,7 @@ All game data stays on the phone. There is no account and no server. Games move 
 - **Live game.** Record rebuys, cash-outs and chips sold back to the bank, with undo. Players can join mid-game, and seats can be swapped on a table view. The screen also shows elapsed time and total buy-ins.
 - **End of game check.** Enter the final chip counts. The app shows whether every chip is accounted for, or how many are missing or extra.
 - **Settlement.** A short list of "A pays B" payments, rounded to the smallest note or coin you use. Any rounding difference is shown. Share or copy the list, and mark each payment as paid.
-- **Side games.** A bomb pot timer that sends a notification and vibrates even when the app is closed. There is also a firetruck tracker (three pots in a row).
+- **Side games.** A bomb pot timer on the game screen: a countdown, and a full-screen announcement with a vibration when one is due. It runs while the app is open; nothing is sent when it is closed. There is also a firetruck tracker (three pots in a row).
 - **Game handover.** Pass a running game to another host's phone with a QR code, or as a file when the game is too big for one code.
 - **Player roster and stats.** Profit over all games, games played and buy-ins for each player, with sorting and filters. Players can be renamed or hidden without changing past results.
 - **Localization.** English, Russian, Spanish, German and French, with an in-app language switch and a choice of currency symbol.
@@ -88,7 +88,7 @@ flowchart TD
     UI --> Domain["domain<br/>game model, settlement, handover"]
     Repo --> Room[("Room database")]
     Repo --> Domain
-    UI --> Platform["ads · billing · bombpot<br/>(AdMob, Play Billing, AlarmManager)"]
+    UI --> Platform["ads · billing · bombpot<br/>(AdMob, Play Billing, vibration)"]
     DI["Hilt modules (di/)"] -.provides.-> Repo
     DI -.provides.-> Platform
 ```
@@ -156,10 +156,7 @@ Unit tests live in `app/src/test/`. They cover money and chip arithmetic, settle
 | `INTERNET`, `ACCESS_NETWORK_STATE` | Loading ads. Game data never leaves the device. |
 | `AD_ID` and `ACCESS_ADSERVICES_*` | Added by the Google Mobile Ads SDK for ad delivery and measurement. Personalization follows the consent you choose in Settings > Privacy options. |
 | `com.android.vending.BILLING` | The one-time "Remove ads" purchase. |
-| `POST_NOTIFICATIONS` | The bomb pot notification when the app is closed. |
-| `SCHEDULE_EXACT_ALARM` | Makes the bomb pot alert arrive on time. The timer still works without it, just less precisely. |
-| `RECEIVE_BOOT_COMPLETED` | Sets the bomb pot alarms again after the phone restarts. |
-| `VIBRATE` | Vibrates when a bomb pot is due. |
+| `VIBRATE` | Vibrates when the open game announces a bomb pot. |
 | `WAKE_LOCK`, `FOREGROUND_SERVICE` | Added by Google Play services libraries. |
 
 The app does not ask for camera access. QR scanning uses Google's Code Scanner, which runs outside the app. App data is excluded from cloud backup and from device-to-device transfer.

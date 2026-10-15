@@ -3,6 +3,7 @@ package com.zango.pokertracker.ui.livegame
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zango.pokertracker.bombpot.BombPotVibration
 import com.zango.pokertracker.core.time.Clock
 import com.zango.pokertracker.core.time.formatElapsed
 import com.zango.pokertracker.core.time.tick
@@ -44,6 +45,7 @@ class LiveGameViewModel @Inject constructor(
     private val repository: PokerRepository,
     private val clock: Clock,
     private val firetruckStore: FiretruckStore,
+    private val bombPotVibration: BombPotVibration,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -70,8 +72,8 @@ class LiveGameViewModel @Inject constructor(
 
     /**
      * How many bomb pots had come round when the timer was last looked at. Null until the first
-     * reading after the screen is shown, so one that passed while the host was elsewhere -- and
-     * was notified about -- is not announced again the moment they come back.
+     * reading after the screen is shown, so one that passed while the host was elsewhere is not
+     * announced late, the moment they come back, as if it were due now.
      */
     private var bombPotsSeen: Long? = null
 
@@ -168,6 +170,8 @@ class LiveGameViewModel @Inject constructor(
         bombPotsSeen = count
         if (count != null && seen != null && count > seen) {
             _announcement.value = LiveAnnouncement.BombPot
+            // Here rather than in the screen, so a rotation redrawing the announcement is silent.
+            bombPotVibration.buzz()
         }
     }
 

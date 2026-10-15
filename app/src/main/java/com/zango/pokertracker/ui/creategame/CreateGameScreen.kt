@@ -1,11 +1,5 @@
 package com.zango.pokertracker.ui.creategame
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -720,7 +714,6 @@ private fun SideGamesSection(
     revealAllProblems: Boolean,
     focus: (FormField) -> Modifier,
 ) {
-    val requestNotifications = rememberNotificationPermissionRequest()
     FormSection(
         title = stringResource(R.string.create_section_side_games),
         subtitle = stringResource(R.string.create_section_side_games_subtitle),
@@ -729,11 +722,7 @@ private fun SideGamesSection(
             title = stringResource(R.string.side_game_bomb_pot),
             description = stringResource(R.string.create_bomb_pot_hint),
             selected = state.form.bombPotEnabled,
-            onToggle = {
-                // Asked at the moment it starts to matter, so the host knows why.
-                if (!state.form.bombPotEnabled) requestNotifications()
-                actions.onToggleBombPot()
-            },
+            onToggle = actions.onToggleBombPot,
         )
         if (state.form.bombPotEnabled) {
             MinutesField(
@@ -779,26 +768,6 @@ private fun SideGameItem(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-            }
-        }
-    }
-}
-
-/**
- * Asks for permission to post notifications, which Android 13 and later hold back until granted.
- * Refusing is fine: the timer still runs on screen, it just cannot call out with the app closed.
- */
-@Composable
-private fun rememberNotificationPermissionRequest(): () -> Unit {
-    val context = LocalContext.current
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {}
-    return remember(context, launcher) {
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
-                PackageManager.PERMISSION_GRANTED
-            ) {
-                launcher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
     }
