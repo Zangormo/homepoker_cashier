@@ -12,7 +12,7 @@
         · Positional placeholders (%1$s) are used everywhere so word order can change freely.
     -->
 
-    <string name="app_name">Poker Tracker</string>
+    <string name="app_name">Homepoker Cashier</string>
 
     <!-- ==================================================================================== -->
     <!-- Shared actions and labels                                                            -->
@@ -339,6 +339,13 @@
     <string name="settings_blind_count">%1$d of %2$d</string>
     <string name="settings_blind_sizes_empty">No levels left. Add the ones you play.</string>
     <string name="settings_add_blinds">Add blinds</string>
+    <!-- About: links out of the app, just above the version. -->
+    <string name="settings_section_about">About</string>
+    <string name="settings_developer_site">Developer website</string>
+    <string name="settings_write_review">Write a review</string>
+    <string name="settings_contact_support">Contact support</string>
+    <!-- %1$s: the support email address -->
+    <string name="error_no_email_app">No email app on this phone. Write to %1$s</string>
     <string name="settings_version">Version %1$s</string>
     <!-- Internal build only (BuildConfig.DEBUG_TOOLS): testers read English, so not translated. -->
     <string name="debug_reset_purchase" translatable="false">Reset purchase (internal build)</string>
@@ -703,8 +710,8 @@
     <!-- Donation prompt, shown after a game ends while ads are still on                      -->
     <!-- ==================================================================================== -->
 
-    <string name="donation_title">Enjoying Poker Tracker?</string>
-    <string name="donation_body">Poker Tracker is made by one developer in their spare time. A small donation is what keeps the updates coming, and it motivates me to keep making the app better for your table.</string>
+    <string name="donation_title">Enjoying Homepoker Cashier?</string>
+    <string name="donation_body">Homepoker Cashier is made by one developer in their spare time. A small donation is what keeps the updates coming, and it motivates me to keep making the app better for your table.</string>
     <string name="donation_ads_note">As a thank you, a donation turns off all ads for good.</string>
     <!-- The same prompt when a full-screen ad has just been closed. -->
     <string name="donation_title_after_ad">Tired of ads like that one?</string>
@@ -719,7 +726,7 @@
     <string name="handoff_title">Hand over game</string>
     <string name="handoff_button">Hand over</string>
     <string name="handoff_qr_description">QR code with the whole game</string>
-    <string name="handoff_instructions">On the other phone, open Poker Tracker, tap New game, then Load a game, and scan this code.</string>
+    <string name="handoff_instructions">On the other phone, open Homepoker Cashier, tap New game, then Load a game, and scan this code.</string>
     <string name="handoff_too_big">This game is too big for one QR code. Send it as a file, and open it on the other phone with New game, then Load a game.</string>
     <string name="handoff_send_file_instead">Send as a file instead</string>
     <string name="handoff_send_file">Send as a file</string>
@@ -740,8 +747,8 @@
     <string name="receive_started">Started %1$s</string>
     <string name="receive_replaces_copy">You already have this game. Taking it over replaces your copy with this one.</string>
     <string name="receive_confirm">Take over</string>
-    <string name="error_receive_not_a_game">That is not a Poker Tracker game</string>
-    <string name="error_receive_too_new">This game comes from a newer version of Poker Tracker. Update the app and try again.</string>
+    <string name="error_receive_not_a_game">That is not a Homepoker Cashier game</string>
+    <string name="error_receive_too_new">This game comes from a newer version of Homepoker Cashier. Update the app and try again.</string>
     <string name="error_receive_scanner">Scanning is not available on this phone. Ask for the game as a file instead.</string>
     <string name="error_receive_failed">Could not take over the game</string>
 

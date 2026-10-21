@@ -14,7 +14,7 @@
           which the app cannot know.
     -->
 
-    <string name="app_name">Poker Tracker</string>
+    <string name="app_name">Homepoker Cashier</string>
 
     <!-- Shared actions and labels -->
     <string name="action_back">Zurück</string>
@@ -272,6 +272,11 @@
     <string name="settings_blind_count">%1$d von %2$d</string>
     <string name="settings_blind_sizes_empty">Keine Stufen mehr. Füge die hinzu, die du spielst.</string>
     <string name="settings_add_blinds">Blinds hinzufügen</string>
+    <string name="settings_section_about">Über die App</string>
+    <string name="settings_developer_site">Website des Entwicklers</string>
+    <string name="settings_write_review">Bewertung schreiben</string>
+    <string name="settings_contact_support">Support kontaktieren</string>
+    <string name="error_no_email_app">Auf diesem Handy gibt es keine E-Mail-App. Schreib an %1$s</string>
     <string name="settings_version">Version %1$s</string>
     <string name="settings_add_blinds_title">Blinds hinzufügen</string>
     <string name="settings_remove_blinds">%1$s entfernen</string>
@@ -557,8 +562,8 @@
     </plurals>
 
     <!-- Donation prompt -->
-    <string name="donation_title">Gefällt dir Poker Tracker?</string>
-    <string name="donation_body">Poker Tracker wird von einem einzelnen Entwickler in seiner Freizeit gemacht. Eine kleine Spende hält die Updates am Laufen und motiviert mich, die App für deine Runde immer besser zu machen.</string>
+    <string name="donation_title">Gefällt dir Homepoker Cashier?</string>
+    <string name="donation_body">Homepoker Cashier wird von einem einzelnen Entwickler in seiner Freizeit gemacht. Eine kleine Spende hält die Updates am Laufen und motiviert mich, die App für deine Runde immer besser zu machen.</string>
     <string name="donation_ads_note">Als Dankeschön schaltet eine Spende die Werbung für immer ab.</string>
     <string name="donation_title_after_ad">Genug von Werbung wie dieser?</string>
     <string name="donation_ads_note_after_ad">Eine kleine Spende schaltet die Werbung für immer ab – auch diese.</string>
@@ -569,7 +574,7 @@
     <string name="handoff_title">Spiel übergeben</string>
     <string name="handoff_button">Übergeben</string>
     <string name="handoff_qr_description">QR-Code mit dem ganzen Spiel</string>
-    <string name="handoff_instructions">Öffne auf dem anderen Handy Poker Tracker, tippe auf Neues Spiel, dann auf Spiel laden, und scanne diesen Code.</string>
+    <string name="handoff_instructions">Öffne auf dem anderen Handy Homepoker Cashier, tippe auf Neues Spiel, dann auf Spiel laden, und scanne diesen Code.</string>
     <string name="handoff_too_big">Dieses Spiel ist zu groß für einen QR-Code. Sende es als Datei und öffne es auf dem anderen Handy über Neues Spiel und dann Spiel laden.</string>
     <string name="handoff_send_file_instead">Stattdessen als Datei senden</string>
     <string name="handoff_send_file">Als Datei senden</string>
@@ -588,8 +593,8 @@
     <string name="receive_started">Begonnen: %1$s</string>
     <string name="receive_replaces_copy">Du hast dieses Spiel schon. Beim Übernehmen wird deine Kopie durch dieses ersetzt.</string>
     <string name="receive_confirm">Übernehmen</string>
-    <string name="error_receive_not_a_game">Das ist kein Poker-Tracker-Spiel</string>
-    <string name="error_receive_too_new">Dieses Spiel stammt aus einer neueren Version von Poker Tracker. Aktualisiere die App und versuche es noch einmal.</string>
+    <string name="error_receive_not_a_game">Das ist kein Homepoker-Cashier-Spiel</string>
+    <string name="error_receive_too_new">Dieses Spiel stammt aus einer neueren Version von Homepoker Cashier. Aktualisiere die App und versuche es noch einmal.</string>
     <string name="error_receive_scanner">Scannen ist auf diesem Handy nicht möglich. Lass dir das Spiel als Datei schicken.</string>
     <string name="error_receive_failed">Das Spiel konnte nicht übernommen werden</string>
 

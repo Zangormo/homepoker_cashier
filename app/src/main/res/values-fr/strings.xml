@@ -15,7 +15,7 @@
         · Apostrophes are typographic (’), which needs no escaping and is correct French.
     -->
 
-    <string name="app_name">Poker Tracker</string>
+    <string name="app_name">Homepoker Cashier</string>
 
     <!-- Shared actions and labels -->
     <string name="action_back">Retour</string>
@@ -273,6 +273,11 @@
     <string name="settings_blind_count">%1$d sur %2$d</string>
     <string name="settings_blind_sizes_empty">Plus aucun niveau. Ajoutez ceux que vous jouez.</string>
     <string name="settings_add_blinds">Ajouter des blindes</string>
+    <string name="settings_section_about">À propos</string>
+    <string name="settings_developer_site">Site du développeur</string>
+    <string name="settings_write_review">Écrire un avis</string>
+    <string name="settings_contact_support">Contacter le support</string>
+    <string name="error_no_email_app">Aucune application de messagerie sur ce téléphone. Écrivez à %1$s</string>
     <string name="settings_version">Version %1$s</string>
     <string name="settings_add_blinds_title">Ajouter des blindes</string>
     <string name="settings_remove_blinds">Retirer %1$s</string>
@@ -582,8 +587,8 @@
     </plurals>
 
     <!-- Donation prompt -->
-    <string name="donation_title">Poker Tracker vous plaît ?</string>
-    <string name="donation_body">Poker Tracker est développé par une seule personne, sur son temps libre. Un petit don permet de continuer les mises à jour et me motive à améliorer l’application pour votre table.</string>
+    <string name="donation_title">Homepoker Cashier vous plaît ?</string>
+    <string name="donation_body">Homepoker Cashier est développé par une seule personne, sur son temps libre. Un petit don permet de continuer les mises à jour et me motive à améliorer l’application pour votre table.</string>
     <string name="donation_ads_note">En remerciement, un don supprime toutes les pubs pour de bon.</string>
     <string name="donation_title_after_ad">Marre des pubs comme celle-là ?</string>
     <string name="donation_ads_note_after_ad">Un petit don supprime toutes les pubs pour de bon, y compris celle-là.</string>
@@ -594,7 +599,7 @@
     <string name="handoff_title">Transmettre la partie</string>
     <string name="handoff_button">Transmettre</string>
     <string name="handoff_qr_description">Code QR contenant toute la partie</string>
-    <string name="handoff_instructions">Sur l’autre téléphone, ouvrez Poker Tracker, appuyez sur Nouvelle partie, puis sur Charger une partie, et scannez ce code.</string>
+    <string name="handoff_instructions">Sur l’autre téléphone, ouvrez Homepoker Cashier, appuyez sur Nouvelle partie, puis sur Charger une partie, et scannez ce code.</string>
     <string name="handoff_too_big">Cette partie est trop grande pour un seul code QR. Envoyez-la sous forme de fichier et ouvrez-la sur l’autre téléphone avec Nouvelle partie, puis Charger une partie.</string>
     <string name="handoff_send_file_instead">Envoyer plutôt un fichier</string>
     <string name="handoff_send_file">Envoyer un fichier</string>
@@ -613,8 +618,8 @@
     <string name="receive_started">Commencée le %1$s</string>
     <string name="receive_replaces_copy">Vous avez déjà cette partie. La reprendre remplace votre copie par celle-ci.</string>
     <string name="receive_confirm">Reprendre</string>
-    <string name="error_receive_not_a_game">Ce n’est pas une partie Poker Tracker</string>
-    <string name="error_receive_too_new">Cette partie vient d’une version plus récente de Poker Tracker. Mettez l’application à jour et réessayez.</string>
+    <string name="error_receive_not_a_game">Ce n’est pas une partie Homepoker Cashier</string>
+    <string name="error_receive_too_new">Cette partie vient d’une version plus récente de Homepoker Cashier. Mettez l’application à jour et réessayez.</string>
     <string name="error_receive_scanner">Le scan n’est pas disponible sur ce téléphone. Demandez la partie sous forme de fichier.</string>
     <string name="error_receive_failed">Impossible de reprendre la partie</string>
 

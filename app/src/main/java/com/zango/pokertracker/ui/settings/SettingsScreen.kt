@@ -95,6 +95,7 @@ fun SettingsScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val noBrowserMessage = stringResource(R.string.error_no_browser)
+    val noEmailMessage = stringResource(R.string.error_no_email_app, SUPPORT_EMAIL)
     val undoLabel = stringResource(R.string.action_undo)
 
     val context = LocalContext.current
@@ -153,8 +154,19 @@ fun SettingsScreen(
                 onRemoveAds = { context.findActivity()?.let(viewModel::onRemoveAds) },
                 onAdPrivacyOptions = { context.findActivity()?.let(viewModel::onAdPrivacyOptions) },
                 onOpenPrivacyPolicy = {
-                    openPrivacyPolicy(context) {
+                    openWebPage(context, PRIVACY_POLICY_URL) {
                         scope.launch { snackbarHostState.showSnackbar(noBrowserMessage) }
+                    }
+                },
+                onAboutLink = { link ->
+                    val opened = when (link) {
+                        AboutLink.DeveloperSite -> openWebPage(context, DEVELOPER_SITE_URL)
+                        AboutLink.Review -> openPlayListing(context)
+                        AboutLink.Support -> writeToSupport(context)
+                    }
+                    if (!opened) {
+                        val message = if (link == AboutLink.Support) noEmailMessage else noBrowserMessage
+                        scope.launch { snackbarHostState.showSnackbar(message) }
                     }
                 },
                 modifier = Modifier.padding(padding),
@@ -185,6 +197,7 @@ private fun SettingsContent(
     onAdPrivacyOptions: () -> Unit,
     onOpenPrivacyPolicy: () -> Unit,
     modifier: Modifier = Modifier,
+    onAboutLink: (AboutLink) -> Unit = {},
     onDebugResetPurchase: () -> Unit = {},
 ) {
     Column(
@@ -261,6 +274,8 @@ private fun SettingsContent(
             Spacer(Modifier.width(8.dp))
             Text(stringResource(R.string.settings_add_blinds))
         }
+
+        AboutSection(onLink = onAboutLink)
 
         // Last and quiet: looked up when reporting a problem, never worked with.
         Text(
@@ -392,14 +407,82 @@ private fun PrivacySection(
 }
 
 /**
- * Opens the privacy policy in whatever browser the phone has. A phone with none at all is rare
- * but possible, and gets a message rather than a crash.
+ * Opens [url] in whatever browser the phone has. A phone with none at all is rare but possible,
+ * and gets a message rather than a crash.
  */
-private fun openPrivacyPolicy(context: Context, onNoBrowser: () -> Unit) {
-    try {
-        context.startActivity(Intent(Intent.ACTION_VIEW, PRIVACY_POLICY_URL.toUri()))
-    } catch (_: ActivityNotFoundException) {
-        onNoBrowser()
+private fun openWebPage(context: Context, url: String, onNoBrowser: () -> Unit) {
+    if (!openWebPage(context, url)) onNoBrowser()
+}
+
+/** False when nothing on the phone can open [url]. */
+private fun openWebPage(context: Context, url: String): Boolean =
+    startActivity(context, Intent(Intent.ACTION_VIEW, url.toUri()))
+
+private const val DEVELOPER_SITE_URL = "https://zangormo.github.io/"
+private const val SUPPORT_EMAIL = "zangormosupport@gmail.com"
+
+/**
+ * The release package, not BuildConfig.APPLICATION_ID: a debug build carries a ".debug" suffix
+ * that has no Play listing.
+ */
+private const val PLAY_PACKAGE = "com.zango.pokertracker"
+
+private enum class AboutLink { DeveloperSite, Review, Support }
+
+/** The Play Store app where there is one, the listing in the browser where there is not. */
+private fun openPlayListing(context: Context): Boolean {
+    val inStore = Intent(Intent.ACTION_VIEW, "market://details?id=$PLAY_PACKAGE".toUri())
+        .setPackage("com.android.vending")
+    return startActivity(context, inStore) ||
+        openWebPage(context, "https://play.google.com/store/apps/details?id=$PLAY_PACKAGE")
+}
+
+/** A new email to support, with the app and version in the subject so a report says what it is about. */
+private fun writeToSupport(context: Context): Boolean {
+    val intent = Intent(Intent.ACTION_SENDTO, "mailto:".toUri())
+        .putExtra(Intent.EXTRA_EMAIL, arrayOf(SUPPORT_EMAIL))
+        .putExtra(
+            Intent.EXTRA_SUBJECT,
+            "${context.getString(R.string.app_name)} ${BuildConfig.VERSION_NAME}",
+        )
+    return startActivity(context, intent)
+}
+
+private fun startActivity(context: Context, intent: Intent): Boolean = try {
+    context.startActivity(intent)
+    true
+} catch (_: ActivityNotFoundException) {
+    false
+}
+
+/** Ways out of the app: the developer's site, a review on Play, and an email to support. */
+@Composable
+private fun AboutSection(onLink: (AboutLink) -> Unit) {
+    SectionLabel(
+        stringResource(R.string.settings_section_about),
+        modifier = Modifier.padding(top = 20.dp),
+    )
+    AboutButton(stringResource(R.string.settings_developer_site)) { onLink(AboutLink.DeveloperSite) }
+    AboutButton(stringResource(R.string.settings_write_review)) { onLink(AboutLink.Review) }
+    AboutButton(stringResource(R.string.settings_contact_support)) { onLink(AboutLink.Support) }
+}
+
+@Composable
+private fun AboutButton(text: String, onClick: () -> Unit) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = MinTouchTarget),
+    ) {
+        Text(text)
+        Spacer(Modifier.width(8.dp))
+        // Says before the tap that this leaves the app.
+        Icon(
+            Icons.AutoMirrored.Filled.OpenInNew,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp),
+        )
     }
 }
 

@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="app/src/main/ic_launcher-playstore.png" alt="Poker Tracker icon" width="96">
+  <img src="app/src/main/ic_launcher-playstore.png" alt="Homepoker Cashier icon" width="96">
 </p>
 
-<h1 align="center">Poker Tracker</h1>
+<h1 align="center">Homepoker Cashier</h1>
 
 <p align="center">
   An Android app that works as the bank for a home cash game: buy-ins, rebuys and cash-outs during the night, then who pays whom at the end.
@@ -24,7 +24,7 @@
 
 ## About
 
-Poker Tracker keeps the books for a home poker cash game. The host records every buy-in, rebuy, chip sale and cash-out as the night goes on. At the end the app checks the chip counts against the money that came in, then works out the payments that settle everyone up. It started as a tool for my own games and is being prepared for release on Google Play.
+Homepoker Cashier keeps the books for a home poker cash game. The host records every buy-in, rebuy, chip sale and cash-out as the night goes on. At the end the app checks the chip counts against the money that came in, then works out the payments that settle everyone up. It started as a tool for my own games and is now available on [Google Play](https://play.google.com/store/apps/details?id=com.zango.pokertracker).
 
 All game data stays on the phone. There is no account and no server. Games move between phones only when a host hands one over by QR code or file.
 
