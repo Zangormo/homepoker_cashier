@@ -223,6 +223,9 @@
     <string name="players_filtered_empty_title">Nadie ha jugado todavía</string>
     <string name="players_filtered_empty_body">El filtro oculta a todos los de la lista.</string>
     <string name="players_filter_clear">Mostrar a todos</string>
+    <string name="players_filter_hidden">Ocultos</string>
+    <string name="players_all_hidden_title">Todos están ocultos</string>
+    <string name="players_all_hidden_body">Marca «Ocultos» en el filtro para verlos.</string>
     <string name="players_no_results_yet">Aún sin resultados</string>
     <string name="players_never_played">Nunca ha jugado</string>
     <string name="players_hidden_note">Oculto en partidas nuevas</string>

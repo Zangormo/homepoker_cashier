@@ -274,6 +274,9 @@
     <string name="players_filtered_empty_title">Nobody has played yet</string>
     <string name="players_filtered_empty_body">Everyone on the roster is hidden by the filter.</string>
     <string name="players_filter_clear">Show everyone</string>
+    <string name="players_filter_hidden">Hidden</string>
+    <string name="players_all_hidden_title">Everyone is hidden</string>
+    <string name="players_all_hidden_body">Tick Hidden in the filter to see them.</string>
     <string name="players_no_results_yet">No results yet</string>
     <string name="players_never_played">Never played</string>
     <string name="players_hidden_note">Hidden from new games</string>

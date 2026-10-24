@@ -100,6 +100,8 @@ data class PlayersUiState(
     val totalPlayers: Int = 0,
     val sort: PlayerSort = PlayerSort.NAME_A_Z,
     val onlyWithGames: Boolean = false,
+    /** Hidden players stay out of the list unless the host asks for them. */
+    val showHidden: Boolean = false,
     val isAdding: Boolean = false,
     val newPlayerName: String = "",
     val newPlayerError: UiText? = null,
@@ -107,6 +109,9 @@ data class PlayersUiState(
     val deleting: DeleteEditor? = null,
 ) {
     val isEmpty: Boolean get() = !isLoading && totalPlayers == 0
+
+    /** Whether the list differs from the plain default, which the bar icon owns up to. */
+    val isFiltered: Boolean get() = onlyWithGames || showHidden
 
     /** Somebody is on the roster, but the filter is hiding all of them. */
     val isFilteredEmpty: Boolean

@@ -92,12 +92,33 @@ class PlayersViewModelTest {
     }
 
     @Test
-    fun `hidden players are listed apart from the ones games are dealt to`() = runTest {
+    fun `hidden players are left out until the host asks for them`() = runTest {
         repository.roster.value = listOf(player(1, "Anna"), player(2, "Boris", archived = true))
+        val viewModel = viewModel()
 
-        val state = state()
+        val state = viewModel.stateWhere { it.active.isNotEmpty() }
         assertEquals(listOf("Anna"), state.active.map { it.name })
-        assertEquals(listOf("Boris"), state.archived.map { it.name })
+        assertTrue(state.archived.isEmpty())
+        assertFalse(state.isFiltered)
+
+        viewModel.onShowHiddenChange(true)
+
+        val shown = viewModel.stateWhere { it.archived.isNotEmpty() }
+        assertEquals(listOf("Anna"), shown.active.map { it.name })
+        assertEquals(listOf("Boris"), shown.archived.map { it.name })
+        assertTrue(shown.isFiltered)
+    }
+
+    @Test
+    fun `a roster of only hidden players offers the way to see them`() = runTest {
+        repository.roster.value = listOf(player(1, "Anna", archived = true))
+        val viewModel = viewModel()
+
+        assertTrue(viewModel.stateWhere { it.isFilteredEmpty }.isFilteredEmpty)
+
+        viewModel.onShowEveryone()
+
+        assertEquals(listOf("Anna"), viewModel.stateWhere { it.archived.isNotEmpty() }.archived.map { it.name })
     }
 
     @Test
@@ -176,6 +197,7 @@ class PlayersViewModelTest {
         repository.roster.value = listOf(player(1, "Anna"))
         repository.playerGames.value = mapOf(1L to listOf(game(1, finalChips = 400)))
         val viewModel = viewModel()
+        viewModel.onShowHiddenChange(true)
         viewModel.stateWhere { it.active.isNotEmpty() }
 
         viewModel.onDeleteRequested(1)
@@ -206,6 +228,7 @@ class PlayersViewModelTest {
     fun `a hidden player can be brought back for the next game`() = runTest {
         repository.roster.value = listOf(player(1, "Anna", archived = true))
         val viewModel = viewModel()
+        viewModel.onShowHiddenChange(true)
         viewModel.stateWhere { it.archived.isNotEmpty() }
 
         viewModel.onRestore(1)

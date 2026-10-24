@@ -225,6 +225,9 @@
     <string name="players_filtered_empty_title">Ещё никто не играл</string>
     <string name="players_filtered_empty_body">Фильтр скрыл всех игроков из состава.</string>
     <string name="players_filter_clear">Показать всех</string>
+    <string name="players_filter_hidden">Скрытые</string>
+    <string name="players_all_hidden_title">Все игроки скрыты</string>
+    <string name="players_all_hidden_body">Отметьте «Скрытые» в фильтре, чтобы их увидеть.</string>
     <string name="players_no_results_yet">Результатов пока нет</string>
     <string name="players_never_played">Ещё не играл</string>
     <string name="players_hidden_note">Не предлагается в новых играх</string>

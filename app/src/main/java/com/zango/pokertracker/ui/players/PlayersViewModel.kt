@@ -60,6 +60,11 @@ class PlayersViewModel @Inject constructor(
     fun onOnlyWithGamesChange(enabled: Boolean) =
         listing.update { it.copy(onlyWithGames = enabled) }
 
+    fun onShowHiddenChange(enabled: Boolean) = listing.update { it.copy(showHidden = enabled) }
+
+    /** The way out of a filter that matches nobody: everyone, hidden players included. */
+    fun onShowEveryone() = listing.update { it.copy(onlyWithGames = false, showHidden = true) }
+
     // -----------------------------------------------------------------------------------------
     // Adding
     // -----------------------------------------------------------------------------------------
@@ -242,10 +247,11 @@ class PlayersViewModel @Inject constructor(
         return PlayersUiState(
             isLoading = false,
             active = arrange(archived = false),
-            archived = arrange(archived = true),
+            archived = if (listing.showHidden) arrange(archived = true) else emptyList(),
             totalPlayers = rows.size,
             sort = listing.sort,
             onlyWithGames = listing.onlyWithGames,
+            showHidden = listing.showHidden,
             isAdding = editing.isAdding,
             newPlayerName = editing.newPlayerName,
             newPlayerError = editing.newPlayerError,
@@ -261,6 +267,7 @@ class PlayersViewModel @Inject constructor(
     private data class Listing(
         val sort: PlayerSort = PlayerSort.NAME_A_Z,
         val onlyWithGames: Boolean = false,
+        val showHidden: Boolean = false,
     )
 
     /** Whatever the host is part-way through, kept apart from what the database reports. */

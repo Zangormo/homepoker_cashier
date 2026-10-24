@@ -222,6 +222,9 @@
     <string name="players_filtered_empty_title">Noch hat niemand gespielt</string>
     <string name="players_filtered_empty_body">Der Filter blendet alle aus der Liste aus.</string>
     <string name="players_filter_clear">Alle anzeigen</string>
+    <string name="players_filter_hidden">Ausgeblendete</string>
+    <string name="players_all_hidden_title">Alle sind ausgeblendet</string>
+    <string name="players_all_hidden_body">Hake im Filter „Ausgeblendete“ an, um sie zu sehen.</string>
     <string name="players_no_results_yet">Noch keine Ergebnisse</string>
     <string name="players_never_played">Nie gespielt</string>
     <string name="players_hidden_note">Bei neuen Spielen ausgeblendet</string>

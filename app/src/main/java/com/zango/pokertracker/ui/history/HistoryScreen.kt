@@ -387,7 +387,9 @@ private fun RowMenu(gameName: String, onDelete: () -> Unit) {
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
+            shape = MaterialTheme.shapes.large,
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.history_delete_game), color = MaterialTheme.colorScheme.error) },

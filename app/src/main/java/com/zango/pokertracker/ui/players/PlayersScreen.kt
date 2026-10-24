@@ -111,10 +111,10 @@ fun PlayersScreen(
                     // Hidden behind an action rather than sitting above the list: the order is set
                     // once in a while, and the rows themselves are what the screen is for.
                     ListingMenu(
-                        sort = state.sort,
-                        onlyWithGames = state.onlyWithGames,
+                        state = state,
                         onSortSelected = viewModel::onSortSelected,
                         onOnlyWithGamesChange = viewModel::onOnlyWithGamesChange,
+                        onShowHiddenChange = viewModel::onShowHiddenChange,
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -135,7 +135,10 @@ fun PlayersScreen(
             state.isLoading -> Centered(Modifier.padding(padding)) { CircularProgressIndicator() }
             state.isEmpty -> Centered(Modifier.padding(padding)) { EmptyRoster() }
             state.isFilteredEmpty -> Centered(Modifier.padding(padding)) {
-                FilteredOutRoster(onClearFilter = { viewModel.onOnlyWithGamesChange(false) })
+                FilteredOutRoster(
+                    onlyWithGames = state.onlyWithGames,
+                    onClearFilter = viewModel::onShowEveryone,
+                )
             }
 
             else -> PlayerList(
@@ -189,17 +192,20 @@ private fun Centered(modifier: Modifier = Modifier, content: @Composable () -> U
 }
 
 /**
- * The order the roster is listed in, and the one thing worth filtering it by.
+ * The order the roster is listed in, and what to show in it.
  *
- * Choosing an order closes the menu, because that is the whole errand. The filter is a switch and
- * leaves it open, so it can be flicked on and the order changed in the same visit.
+ * Choosing an order closes the menu, because that is the whole errand. The filters are switches
+ * and leave it open, so several can be flicked and the order changed in the same visit.
+ *
+ * Dressed like the app's dialogs - the overlay surface, rounded corners and a hairline edge -
+ * rather than in Material's near-square default, which looked borrowed beside them.
  */
 @Composable
 private fun ListingMenu(
-    sort: PlayerSort,
-    onlyWithGames: Boolean,
+    state: PlayersUiState,
     onSortSelected: (PlayerSort) -> Unit,
     onOnlyWithGamesChange: (Boolean) -> Unit,
+    onShowHiddenChange: (Boolean) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -210,7 +216,7 @@ private fun ListingMenu(
                 contentDescription = stringResource(R.string.players_sort_and_filter),
                 // A filter that is on changes what the list contains, so it says so from the bar
                 // rather than only from inside the menu that set it.
-                tint = if (onlyWithGames) {
+                tint = if (state.isFiltered) {
                     MaterialTheme.colorScheme.primary
                 } else {
                     LocalContentColor.current
@@ -218,7 +224,13 @@ private fun ListingMenu(
             )
         }
 
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            shape = MaterialTheme.shapes.large,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+        ) {
             MenuHeader(stringResource(R.string.players_sort_header))
             PlayerSort.entries.forEach { option ->
                 DropdownMenuItem(
@@ -228,7 +240,7 @@ private fun ListingMenu(
                         expanded = false
                     },
                     trailingIcon = {
-                        if (option == sort) {
+                        if (option == state.sort) {
                             Icon(
                                 Icons.Filled.Check,
                                 contentDescription = null,
@@ -239,19 +251,36 @@ private fun ListingMenu(
                 )
             }
 
-            HorizontalDivider(Modifier.padding(vertical = 4.dp))
+            HorizontalDivider(
+                Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+                color = MaterialTheme.colorScheme.outline,
+            )
 
             MenuHeader(stringResource(R.string.players_filter_header))
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.players_filter_played)) },
-                onClick = { onOnlyWithGamesChange(!onlyWithGames) },
-                leadingIcon = {
-                    // The row carries the click, so the box itself must not take a second one.
-                    Checkbox(checked = onlyWithGames, onCheckedChange = null)
-                },
+            FilterItem(
+                label = stringResource(R.string.players_filter_played),
+                checked = state.onlyWithGames,
+                onCheckedChange = onOnlyWithGamesChange,
+            )
+            FilterItem(
+                label = stringResource(R.string.players_filter_hidden),
+                checked = state.showHidden,
+                onCheckedChange = onShowHiddenChange,
             )
         }
     }
+}
+
+@Composable
+private fun FilterItem(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    DropdownMenuItem(
+        text = { Text(label) },
+        onClick = { onCheckedChange(!checked) },
+        leadingIcon = {
+            // The row carries the click, so the box itself must not take a second one.
+            Checkbox(checked = checked, onCheckedChange = null)
+        },
+    )
 }
 
 @Composable
@@ -289,18 +318,25 @@ private fun EmptyRoster() {
  * it, so it cannot be mistaken for an empty roster.
  */
 @Composable
-private fun FilteredOutRoster(onClearFilter: () -> Unit) {
+private fun FilteredOutRoster(onlyWithGames: Boolean, onClearFilter: () -> Unit) {
+    // With the games filter off, the only thing that can empty the list is hiding everyone.
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Text(
-            stringResource(R.string.players_filtered_empty_title),
+            stringResource(
+                if (onlyWithGames) R.string.players_filtered_empty_title
+                else R.string.players_all_hidden_title,
+            ),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
         )
         Text(
-            stringResource(R.string.players_filtered_empty_body),
+            stringResource(
+                if (onlyWithGames) R.string.players_filtered_empty_body
+                else R.string.players_all_hidden_body,
+            ),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -493,7 +529,9 @@ private fun RowMenu(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
+            shape = MaterialTheme.shapes.large,
             containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         ) {
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.players_rename)) },

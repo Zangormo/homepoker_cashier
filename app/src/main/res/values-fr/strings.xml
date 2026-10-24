@@ -223,6 +223,9 @@
     <string name="players_filtered_empty_title">Personne n’a encore joué</string>
     <string name="players_filtered_empty_body">Le filtre masque tout le monde dans la liste.</string>
     <string name="players_filter_clear">Afficher tout le monde</string>
+    <string name="players_filter_hidden">Masqués</string>
+    <string name="players_all_hidden_title">Tout le monde est masqué</string>
+    <string name="players_all_hidden_body">Cochez « Masqués » dans le filtre pour les voir.</string>
     <string name="players_no_results_yet">Pas encore de résultats</string>
     <string name="players_never_played">N’a jamais joué</string>
     <string name="players_hidden_note">Masqué des nouvelles parties</string>
