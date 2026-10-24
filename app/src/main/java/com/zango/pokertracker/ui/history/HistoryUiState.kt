@@ -15,6 +15,20 @@ data class IncomingGame(
     val replacesCopy: Boolean,
 )
 
+/** What the host sees before games from another phone's history land on this one. */
+data class IncomingHistory(
+    val gameCount: Int,
+    /** Of [gameCount], how many this phone does not have yet; only these are taken in. */
+    val newGameCount: Int,
+    /** "3 Jan 2026 – 22 Sep 2026", or a single day when every game was played on it. */
+    val dateRange: String,
+    /** Names this phone's roster does not know, who will join it. */
+    val newPlayerCount: Int,
+) {
+    val alreadyHereCount: Int get() = gameCount - newGameCount
+    val hasAnythingNew: Boolean get() = newGameCount > 0
+}
+
 /** One game in the history list. */
 data class HistoryRow(
     val gameId: Long,
@@ -40,6 +54,8 @@ data class HistoryUiState(
     val pendingDeletion: HistoryRow? = null,
     /** A game handed over from another phone, shown for the host to confirm before it lands. */
     val incoming: IncomingGame? = null,
+    /** Games from another phone's history, shown for the host to confirm before they land. */
+    val incomingHistory: IncomingHistory? = null,
 ) {
     val isEmpty: Boolean get() = !isLoading && inProgress.isEmpty() && finished.isEmpty()
 }

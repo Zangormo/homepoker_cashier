@@ -160,4 +160,12 @@ interface PokerRepository {
      * Returns the new game's id.
      */
     suspend fun importGame(transfer: GameTransfer, replacing: Long? = null): Long
+
+    /**
+     * Takes in games from another phone's history, all or nothing. Players are matched by name as
+     * in [importGame], so their results add to what this phone already has on them. A game this
+     * phone already holds is left alone rather than replaced or doubled, so taking the same history
+     * twice changes nothing the second time. Returns how many games were added.
+     */
+    suspend fun importGames(transfers: List<GameTransfer>): Int
 }

@@ -755,4 +755,45 @@
     <string name="error_receive_scanner">Scanning is not available on this phone. Ask for the game as a file instead.</string>
     <string name="error_receive_failed">Could not take over the game</string>
 
+    <!-- Sharing history -->
+    <string name="action_close">Close</string>
+    <string name="share_button">Share</string>
+    <string name="share_import">Import</string>
+    <string name="share_export">Export</string>
+    <string name="import_title">Import games</string>
+    <string name="import_body">Scan the QR code or open the file another host exported from their history.</string>
+    <string name="import_confirm_title">Import games?</string>
+    <string name="import_players_merge">Players with the same name as someone on your roster are joined to them, so their results add up.</string>
+    <string name="import_nothing_new">You already have all of these games.</string>
+    <string name="import_confirm">Import</string>
+    <string name="error_import_failed">Could not import the games</string>
+    <string name="error_export_failed">Could not prepare the games</string>
+    <string name="export_title">Export games</string>
+    <string name="export_select_all">All games</string>
+    <string name="export_selected_of">%1$d of %2$d</string>
+    <string name="export_choose">Choose games</string>
+    <string name="export_empty">No finished games to export yet.</string>
+    <string name="export_instructions">On the other phone, open Homepoker Cashier, tap Share, then Import, and scan this code.</string>
+    <string name="export_too_big">These games do not fit in one QR code. Send them as a file, and open it on the other phone with Share, then Import.</string>
+    <string name="export_share_chooser">Send the games</string>
+    <string name="export_file_name">Poker games</string>
+    <string name="export_qr_description">QR code with the chosen games</string>
+    <string name="export_done">Done</string>
+    <plurals name="import_new_players">
+        <item quantity="one">%1$d new player will join your roster.</item>
+        <item quantity="other">%1$d new players will join your roster.</item>
+    </plurals>
+    <plurals name="import_already_here">
+        <item quantity="one">%1$d game is already on this phone and will be skipped.</item>
+        <item quantity="other">%1$d games are already on this phone and will be skipped.</item>
+    </plurals>
+    <plurals name="message_games_imported">
+        <item quantity="one">Imported %1$d game</item>
+        <item quantity="other">Imported %1$d games</item>
+    </plurals>
+    <plurals name="export_button">
+        <item quantity="one">Export %1$d game</item>
+        <item quantity="other">Export %1$d games</item>
+    </plurals>
+
 </resources>

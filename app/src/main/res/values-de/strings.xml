@@ -601,4 +601,45 @@
     <string name="error_receive_scanner">Scannen ist auf diesem Handy nicht möglich. Lass dir das Spiel als Datei schicken.</string>
     <string name="error_receive_failed">Das Spiel konnte nicht übernommen werden</string>
 
+    <!-- Sharing history -->
+    <string name="action_close">Schließen</string>
+    <string name="share_button">Teilen</string>
+    <string name="share_import">Importieren</string>
+    <string name="share_export">Exportieren</string>
+    <string name="import_title">Spiele importieren</string>
+    <string name="import_body">Scanne den QR-Code oder öffne die Datei, die ein anderer Gastgeber aus seinem Verlauf exportiert hat.</string>
+    <string name="import_confirm_title">Spiele importieren?</string>
+    <string name="import_players_merge">Spieler mit demselben Namen wie jemand in deiner Liste werden mit ihm zusammengeführt, ihre Ergebnisse addieren sich.</string>
+    <string name="import_nothing_new">Du hast alle diese Spiele schon.</string>
+    <string name="import_confirm">Importieren</string>
+    <string name="error_import_failed">Die Spiele konnten nicht importiert werden</string>
+    <string name="error_export_failed">Die Spiele konnten nicht vorbereitet werden</string>
+    <string name="export_title">Spiele exportieren</string>
+    <string name="export_select_all">Alle Spiele</string>
+    <string name="export_selected_of">%1$d von %2$d</string>
+    <string name="export_choose">Spiele auswählen</string>
+    <string name="export_empty">Noch keine beendeten Spiele zum Exportieren.</string>
+    <string name="export_instructions">Öffne auf dem anderen Handy Homepoker Cashier, tippe auf Teilen, dann Importieren, und scanne diesen Code.</string>
+    <string name="export_too_big">Diese Spiele passen nicht in einen QR-Code. Sende sie als Datei und öffne sie auf dem anderen Handy über Teilen, dann Importieren.</string>
+    <string name="export_share_chooser">Spiele senden</string>
+    <string name="export_file_name">Pokerspiele</string>
+    <string name="export_qr_description">QR-Code mit den ausgewählten Spielen</string>
+    <string name="export_done">Fertig</string>
+    <plurals name="import_new_players">
+        <item quantity="one">%1$d neuer Spieler kommt in deine Liste.</item>
+        <item quantity="other">%1$d neue Spieler kommen in deine Liste.</item>
+    </plurals>
+    <plurals name="import_already_here">
+        <item quantity="one">%1$d Spiel ist schon auf diesem Handy und wird übersprungen.</item>
+        <item quantity="other">%1$d Spiele sind schon auf diesem Handy und werden übersprungen.</item>
+    </plurals>
+    <plurals name="message_games_imported">
+        <item quantity="one">%1$d Spiel importiert</item>
+        <item quantity="other">%1$d Spiele importiert</item>
+    </plurals>
+    <plurals name="export_button">
+        <item quantity="one">%1$d Spiel exportieren</item>
+        <item quantity="other">%1$d Spiele exportieren</item>
+    </plurals>
+
 </resources>

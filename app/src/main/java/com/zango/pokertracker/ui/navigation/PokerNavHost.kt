@@ -27,6 +27,7 @@ import androidx.navigation.navArgument
 import com.zango.pokertracker.ui.creategame.CreateGameScreen
 import com.zango.pokertracker.ui.donation.DonationPrompt
 import com.zango.pokertracker.ui.endgame.EndGameScreen
+import com.zango.pokertracker.ui.handoff.ExportScreen
 import com.zango.pokertracker.ui.handoff.HandOffScreen
 import com.zango.pokertracker.ui.history.HistoryScreen
 import com.zango.pokertracker.ui.livegame.LiveGameScreen
@@ -51,6 +52,7 @@ object Routes {
     const val SETTLEMENT = "settlement/{$GAME_ID}?$OFFER_DONATION={$OFFER_DONATION}"
     const val PLAYER_DETAIL = "player/{$PLAYER_ID}"
     const val HAND_OFF = "hand-off/{$GAME_ID}"
+    const val EXPORT = "export"
 
     fun liveGame(gameId: Long): String = "live-game/$gameId"
 
@@ -243,7 +245,15 @@ private fun PokerRoutes(
                         navController.navigate(Routes.settlement(gameId))
                     }
                 },
+                onExport = {
+                    navController.whileOn(entry) { navController.navigate(Routes.EXPORT) }
+                },
             )
+        }
+
+        composable(Routes.EXPORT) { entry ->
+            GuardedBack(navController, entry)
+            ExportScreen(onBack = { navController.popFrom(entry) })
         }
 
         composable(Routes.PLAYERS) { entry ->

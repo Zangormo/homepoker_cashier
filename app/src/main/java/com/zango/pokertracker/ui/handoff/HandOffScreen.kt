@@ -204,7 +204,7 @@ private fun HandOffContent(
                 horizontalArrangement = Arrangement.spacedBy(24.dp, Alignment.CenterHorizontally),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                QrCode(payload, Modifier.size(qrSide))
+                QrCode(payload, stringResource(R.string.handoff_qr_description), Modifier.size(qrSide))
                 Column(
                     modifier = Modifier
                         .weight(1f, fill = false)
@@ -227,7 +227,13 @@ private fun HandOffContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Text(gameName, style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
-                if (fitsInQrCode) QrCode(payload, Modifier.fillMaxWidth().aspectRatio(1f))
+                if (fitsInQrCode) {
+                    QrCode(
+                        payload,
+                        stringResource(R.string.handoff_qr_description),
+                        Modifier.fillMaxWidth().aspectRatio(1f),
+                    )
+                }
                 HandOffDetails(gameName = null, fitsInQrCode, onSendFile, onDone)
             }
         }
@@ -235,10 +241,10 @@ private fun HandOffContent(
 }
 
 /** Wide enough for any phone's code to fill it, narrow enough to stay framable from another phone. */
-private val MaxContentWidth = 480.dp
+internal val MaxContentWidth = 480.dp
 
 @Composable
-private fun QrCode(payload: String, modifier: Modifier = Modifier) {
+internal fun QrCode(payload: String, contentDescription: String, modifier: Modifier = Modifier) {
     val qr by produceState<ImageBitmap?>(initialValue = null, payload) {
         value = withContext(Dispatchers.Default) { qrCode(payload) }
     }
@@ -253,7 +259,7 @@ private fun QrCode(payload: String, modifier: Modifier = Modifier) {
             qr?.let {
                 Image(
                     bitmap = it,
-                    contentDescription = stringResource(R.string.handoff_qr_description),
+                    contentDescription = contentDescription,
                     filterQuality = FilterQuality.None,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -336,13 +342,17 @@ private fun qrCode(text: String): ImageBitmap {
     return Bitmap.createBitmap(pixels, size, size, Bitmap.Config.ARGB_8888).asImageBitmap()
 }
 
+private fun shareGameFile(context: Context, gameName: String, payload: String) =
+    shareTransferFile(context, gameName, payload, context.getString(R.string.handoff_share_chooser))
+
 /**
- * Writes the game to a file in the cache and offers it to whatever the host sends things with.
- * The file is overwritten on the next handover, so the cache never collects old nights.
+ * Writes a handover to a file in the cache and offers it to whatever the host sends things with.
+ * The file is overwritten on the next handover of the same name, so the cache never collects old
+ * nights.
  */
-private fun shareGameFile(context: Context, gameName: String, payload: String) {
+internal fun shareTransferFile(context: Context, fileName: String, payload: String, chooserTitle: String) {
     val directory = File(context.cacheDir, HANDOFF_DIRECTORY).apply { mkdirs() }
-    val safeName = gameName.replace(Regex("[^\\p{L}\\p{N} _-]"), "").trim().ifEmpty { "game" }
+    val safeName = fileName.replace(Regex("[^\\p{L}\\p{N} _-]"), "").trim().ifEmpty { "game" }
     val file = File(directory, "$safeName.$HANDOFF_EXTENSION")
     file.writeText(payload)
     val uri = FileProvider.getUriForFile(context, "${context.packageName}.handoff", file)
@@ -350,7 +360,7 @@ private fun shareGameFile(context: Context, gameName: String, payload: String) {
         .setType("application/octet-stream")
         .putExtra(Intent.EXTRA_STREAM, uri)
         .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    context.startActivity(Intent.createChooser(send, context.getString(R.string.handoff_share_chooser)))
+    context.startActivity(Intent.createChooser(send, chooserTitle))
 }
 
 private const val HANDOFF_DIRECTORY = "handoff"

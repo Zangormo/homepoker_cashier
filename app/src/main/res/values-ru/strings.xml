@@ -660,4 +660,53 @@
     <string name="error_receive_scanner">Сканирование на этом телефоне недоступно. Попросите прислать игру файлом.</string>
     <string name="error_receive_failed">Не удалось принять игру</string>
 
+    <!-- Sharing history -->
+    <string name="action_close">Закрыть</string>
+    <string name="share_button">Поделиться</string>
+    <string name="share_import">Импорт</string>
+    <string name="share_export">Экспорт</string>
+    <string name="import_title">Импорт игр</string>
+    <string name="import_body">Отсканируйте QR-код или откройте файл, который другой хост экспортировал из своей истории.</string>
+    <string name="import_confirm_title">Импортировать игры?</string>
+    <string name="import_players_merge">Игроки с такими же именами, как в вашем составе, объединятся с ними, и их результаты сложатся.</string>
+    <string name="import_nothing_new">Все эти игры у вас уже есть.</string>
+    <string name="import_confirm">Импортировать</string>
+    <string name="error_import_failed">Не удалось импортировать игры</string>
+    <string name="error_export_failed">Не удалось подготовить игры</string>
+    <string name="export_title">Экспорт игр</string>
+    <string name="export_select_all">Все игры</string>
+    <string name="export_selected_of">%1$d из %2$d</string>
+    <string name="export_choose">Выберите игры</string>
+    <string name="export_empty">Пока нет завершённых игр для экспорта.</string>
+    <string name="export_instructions">На другом телефоне откройте Homepoker Cashier, нажмите «Поделиться», затем «Импорт» и отсканируйте этот код.</string>
+    <string name="export_too_big">Эти игры не помещаются в один QR-код. Отправьте их файлом и откройте его на другом телефоне через «Поделиться», затем «Импорт».</string>
+    <string name="export_share_chooser">Отправить игры</string>
+    <string name="export_file_name">Покерные игры</string>
+    <string name="export_qr_description">QR-код с выбранными играми</string>
+    <string name="export_done">Готово</string>
+    <plurals name="import_new_players">
+        <item quantity="one">%1$d новый игрок добавится в состав.</item>
+        <item quantity="few">%1$d новых игрока добавятся в состав.</item>
+        <item quantity="many">%1$d новых игроков добавятся в состав.</item>
+        <item quantity="other">%1$d новых игроков добавятся в состав.</item>
+    </plurals>
+    <plurals name="import_already_here">
+        <item quantity="one">%1$d игра уже есть на этом телефоне и будет пропущена.</item>
+        <item quantity="few">%1$d игры уже есть на этом телефоне и будут пропущены.</item>
+        <item quantity="many">%1$d игр уже есть на этом телефоне и будут пропущены.</item>
+        <item quantity="other">%1$d игр уже есть на этом телефоне и будут пропущены.</item>
+    </plurals>
+    <plurals name="message_games_imported">
+        <item quantity="one">Импортирована %1$d игра</item>
+        <item quantity="few">Импортировано %1$d игры</item>
+        <item quantity="many">Импортировано %1$d игр</item>
+        <item quantity="other">Импортировано %1$d игр</item>
+    </plurals>
+    <plurals name="export_button">
+        <item quantity="one">Экспортировать %1$d игру</item>
+        <item quantity="few">Экспортировать %1$d игры</item>
+        <item quantity="many">Экспортировать %1$d игр</item>
+        <item quantity="other">Экспортировать %1$d игр</item>
+    </plurals>
+
 </resources>

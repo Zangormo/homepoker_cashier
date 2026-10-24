@@ -38,10 +38,10 @@ import androidx.compose.ui.unit.dp
 import com.zango.pokertracker.R
 import com.zango.pokertracker.ui.theme.PokerTheme
 
-private const val OPEN_MILLIS = 220
+internal const val OPEN_MILLIS = 220
 
 /** How far behind the one below it each option starts, so they rise in a quick cascade. */
-private const val STAGGER_MILLIS = 50
+internal const val STAGGER_MILLIS = 50
 
 /**
  * "New game" opens into two ways of getting a game: set one up, or load one another host handed
@@ -96,23 +96,28 @@ fun NewGameMenu(
     }
 }
 
+/**
+ * One option rising out of a floating button. [origin] is the corner it grows from: bottom right
+ * over the new-game button, bottom left over the share button.
+ */
 @Composable
-private fun MenuOption(
+internal fun MenuOption(
     visible: Boolean,
     delayMillis: Int,
     label: String,
     icon: ImageVector,
     primary: Boolean,
     onClick: () -> Unit,
+    origin: TransformOrigin = TransformOrigin(1f, 1f),
 ) {
     AnimatedVisibility(
         visible = visible,
         enter = fadeIn(tween(OPEN_MILLIS, delayMillis)) +
             slideInVertically(tween(OPEN_MILLIS, delayMillis)) { it / 2 } +
-            scaleIn(tween(OPEN_MILLIS, delayMillis), initialScale = 0.6f, transformOrigin = TransformOrigin(1f, 1f)),
+            scaleIn(tween(OPEN_MILLIS, delayMillis), initialScale = 0.6f, transformOrigin = origin),
         exit = fadeOut(tween(OPEN_MILLIS / 2)) +
             slideOutVertically(tween(OPEN_MILLIS / 2)) { it / 2 } +
-            scaleOut(tween(OPEN_MILLIS / 2), targetScale = 0.6f, transformOrigin = TransformOrigin(1f, 1f)),
+            scaleOut(tween(OPEN_MILLIS / 2), targetScale = 0.6f, transformOrigin = origin),
         label = label,
     ) {
         ExtendedFloatingActionButton(

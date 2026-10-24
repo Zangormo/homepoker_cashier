@@ -626,4 +626,49 @@
     <string name="error_receive_scanner">No se puede escanear en este teléfono. Pide que te envíen la partida como archivo.</string>
     <string name="error_receive_failed">No se pudo recibir la partida</string>
 
+    <!-- Sharing history -->
+    <string name="action_close">Cerrar</string>
+    <string name="share_button">Compartir</string>
+    <string name="share_import">Importar</string>
+    <string name="share_export">Exportar</string>
+    <string name="import_title">Importar partidas</string>
+    <string name="import_body">Escanea el código QR o abre el archivo que otro anfitrión exportó de su historial.</string>
+    <string name="import_confirm_title">¿Importar partidas?</string>
+    <string name="import_players_merge">Los jugadores con el mismo nombre que alguien de tu lista se unen a él, y sus resultados se suman.</string>
+    <string name="import_nothing_new">Ya tienes todas estas partidas.</string>
+    <string name="import_confirm">Importar</string>
+    <string name="error_import_failed">No se pudieron importar las partidas</string>
+    <string name="error_export_failed">No se pudieron preparar las partidas</string>
+    <string name="export_title">Exportar partidas</string>
+    <string name="export_select_all">Todas las partidas</string>
+    <string name="export_selected_of">%1$d de %2$d</string>
+    <string name="export_choose">Elige partidas</string>
+    <string name="export_empty">Todavía no hay partidas terminadas para exportar.</string>
+    <string name="export_instructions">En el otro teléfono, abre Homepoker Cashier, toca Compartir, luego Importar, y escanea este código.</string>
+    <string name="export_too_big">Estas partidas no caben en un solo código QR. Envíalas como archivo y ábrelo en el otro teléfono con Compartir, luego Importar.</string>
+    <string name="export_share_chooser">Enviar las partidas</string>
+    <string name="export_file_name">Partidas de poker</string>
+    <string name="export_qr_description">Código QR con las partidas elegidas</string>
+    <string name="export_done">Listo</string>
+    <plurals name="import_new_players">
+        <item quantity="one">%1$d jugador nuevo se añadirá a tu lista.</item>
+        <item quantity="many">%1$d jugadores nuevos se añadirán a tu lista.</item>
+        <item quantity="other">%1$d jugadores nuevos se añadirán a tu lista.</item>
+    </plurals>
+    <plurals name="import_already_here">
+        <item quantity="one">%1$d partida ya está en este teléfono y se omitirá.</item>
+        <item quantity="many">%1$d partidas ya están en este teléfono y se omitirán.</item>
+        <item quantity="other">%1$d partidas ya están en este teléfono y se omitirán.</item>
+    </plurals>
+    <plurals name="message_games_imported">
+        <item quantity="one">%1$d partida importada</item>
+        <item quantity="many">%1$d partidas importadas</item>
+        <item quantity="other">%1$d partidas importadas</item>
+    </plurals>
+    <plurals name="export_button">
+        <item quantity="one">Exportar %1$d partida</item>
+        <item quantity="many">Exportar %1$d partidas</item>
+        <item quantity="other">Exportar %1$d partidas</item>
+    </plurals>
+
 </resources>

@@ -103,9 +103,25 @@ fun GameSnapshot.toTransfer(): GameTransfer {
     )
 }
 
+/**
+ * Several finished games at once, for a host passing their history on. Each game is the same
+ * [GameTransfer] a single handover carries, so the receiving phone takes them in the same way.
+ */
+@Serializable
+data class HistoryTransfer(
+    @SerialName("v") val version: Int,
+    val games: List<GameTransfer>,
+) {
+    companion object {
+        const val FORMAT_VERSION: Int = 1
+    }
+}
+
 /** What came out of reading something that was scanned or opened. */
 sealed interface DecodedTransfer {
     data class Game(val transfer: GameTransfer) : DecodedTransfer
+
+    data class History(val games: List<GameTransfer>) : DecodedTransfer
 
     /** A QR code or file that is not one of ours, or one that got damaged on the way. */
     data object NotAGame : DecodedTransfer
@@ -115,7 +131,7 @@ sealed interface DecodedTransfer {
 }
 
 /**
- * Turns a game into text and back.
+ * Turns a game, or a whole history of them, into text and back.
  *
  * JSON, deflated, then base64 so it survives anything that carries text: a QR code, a messenger,
  * a file. The prefix marks it as ours, so a stray QR code is recognised as not a game at once
@@ -125,11 +141,17 @@ object GameTransferCodec {
 
     private const val PREFIX = "PKTG1:"
 
+    /** Its own prefix, so an older app that only knows single games refuses a history cleanly. */
+    private const val HISTORY_PREFIX = "PKTH1:"
+
     /** The longest text one QR code can carry at the error correction we draw it with. */
     const val MAX_QR_LENGTH: Int = 2_300
 
     /** Anything bigger than this is not a home game; refusing it early keeps a bad file cheap. */
     private const val MAX_INFLATED_BYTES = 1_000_000
+
+    /** Years of weekly games still come in well under this. */
+    private const val MAX_HISTORY_INFLATED_BYTES = 8_000_000
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -141,18 +163,49 @@ object GameTransferCodec {
         return PREFIX + Base64.getUrlEncoder().withoutPadding().encodeToString(deflate(bytes))
     }
 
+    fun encodeHistory(games: List<GameTransfer>): String {
+        val history = HistoryTransfer(HistoryTransfer.FORMAT_VERSION, games)
+        val bytes = json.encodeToString(HistoryTransfer.serializer(), history).toByteArray()
+        return HISTORY_PREFIX + Base64.getUrlEncoder().withoutPadding().encodeToString(deflate(bytes))
+    }
+
+    /** Reads either a single game or a history; the caller tells them apart by the result. */
     fun decode(text: String): DecodedTransfer {
-        val body = text.trim().takeIf { it.startsWith(PREFIX) }?.removePrefix(PREFIX)
-            ?: return DecodedTransfer.NotAGame
-        return try {
-            val raw = inflate(Base64.getUrlDecoder().decode(body))
-                ?: return DecodedTransfer.NotAGame
-            val transfer = json.decodeFromString(GameTransfer.serializer(), raw.decodeToString())
-            when {
-                transfer.version > GameTransfer.FORMAT_VERSION -> DecodedTransfer.TooNew
-                !transfer.isSane() -> DecodedTransfer.NotAGame
-                else -> DecodedTransfer.Game(transfer)
+        val trimmed = text.trim()
+        return when {
+            trimmed.startsWith(PREFIX) -> read(trimmed.removePrefix(PREFIX), MAX_INFLATED_BYTES) { raw ->
+                val transfer = json.decodeFromString(GameTransfer.serializer(), raw)
+                when {
+                    transfer.version > GameTransfer.FORMAT_VERSION -> DecodedTransfer.TooNew
+                    !transfer.isSane() -> DecodedTransfer.NotAGame
+                    else -> DecodedTransfer.Game(transfer)
+                }
             }
+
+            trimmed.startsWith(HISTORY_PREFIX) ->
+                read(trimmed.removePrefix(HISTORY_PREFIX), MAX_HISTORY_INFLATED_BYTES) { raw ->
+                    val history = json.decodeFromString(HistoryTransfer.serializer(), raw)
+                    when {
+                        history.version > HistoryTransfer.FORMAT_VERSION ||
+                            history.games.any { it.version > GameTransfer.FORMAT_VERSION } ->
+                            DecodedTransfer.TooNew
+
+                        history.games.isEmpty() || !history.games.all { it.isSane() } ->
+                            DecodedTransfer.NotAGame
+
+                        else -> DecodedTransfer.History(history.games)
+                    }
+                }
+
+            else -> DecodedTransfer.NotAGame
+        }
+    }
+
+    private fun read(body: String, limit: Int, parse: (String) -> DecodedTransfer): DecodedTransfer =
+        try {
+            inflate(Base64.getUrlDecoder().decode(body), limit)
+                ?.let { parse(it.decodeToString()) }
+                ?: DecodedTransfer.NotAGame
         } catch (_: IllegalArgumentException) {
             DecodedTransfer.NotAGame
         } catch (_: SerializationException) {
@@ -160,7 +213,6 @@ object GameTransferCodec {
         } catch (_: DataFormatException) {
             DecodedTransfer.NotAGame
         }
-    }
 
     /**
      * The checks a file from outside has to pass before it goes anywhere near the database. The
@@ -184,8 +236,8 @@ object GameTransferCodec {
         return out.toByteArray()
     }
 
-    /** Null when the data is truncated or would inflate past [MAX_INFLATED_BYTES]. */
-    private fun inflate(bytes: ByteArray): ByteArray? {
+    /** Null when the data is truncated or would inflate past [limit] bytes. */
+    private fun inflate(bytes: ByteArray, limit: Int): ByteArray? {
         val inflater = Inflater()
         inflater.setInput(bytes)
         val out = ByteArrayOutputStream()
@@ -195,7 +247,7 @@ object GameTransferCodec {
                 val count = inflater.inflate(buffer)
                 if (count == 0 && (inflater.needsInput() || inflater.needsDictionary())) return null
                 out.write(buffer, 0, count)
-                if (out.size() > MAX_INFLATED_BYTES) return null
+                if (out.size() > limit) return null
             }
         } finally {
             inflater.end()

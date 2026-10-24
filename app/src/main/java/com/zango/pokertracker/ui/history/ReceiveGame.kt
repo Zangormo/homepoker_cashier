@@ -104,17 +104,26 @@ private fun readSmallText(context: Context, uri: Uri): String? {
     }
 }
 
-/** Scan or open a file: asked once, so the host never lands in the wrong one. */
+/**
+ * Scan or open a file: asked once, so the host never lands in the wrong one. The same choice
+ * serves taking over one game and importing a history, so only the wording changes.
+ */
 @Composable
-fun ReceiveGameDialog(onScan: () -> Unit, onOpenFile: () -> Unit, onDismiss: () -> Unit) {
+fun ReceiveGameDialog(
+    onScan: () -> Unit,
+    onOpenFile: () -> Unit,
+    onDismiss: () -> Unit,
+    title: String = stringResource(R.string.receive_title),
+    body: String = stringResource(R.string.receive_body),
+) {
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        title = { Text(stringResource(R.string.receive_title)) },
+        title = { Text(title) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    stringResource(R.string.receive_body),
+                    body,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -183,6 +192,93 @@ fun IncomingGameDialog(game: IncomingGame, onConfirm: () -> Unit, onDismiss: () 
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) }
         },
     )
+}
+
+/**
+ * The last look before another phone's history lands on this one. It says what will merge, so a
+ * host is not surprised to find a familiar name's results suddenly larger.
+ */
+@Composable
+fun IncomingHistoryDialog(history: IncomingHistory, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        title = { Text(stringResource(R.string.import_confirm_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    pluralStringResource(R.plurals.game_count, history.gameCount, history.gameCount),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    history.dateRange,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                if (history.hasAnythingNew) {
+                    Text(
+                        stringResource(R.string.import_players_merge),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                    if (history.newPlayerCount > 0) {
+                        Text(
+                            pluralStringResource(
+                                R.plurals.import_new_players,
+                                history.newPlayerCount,
+                                history.newPlayerCount,
+                            ),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    if (history.alreadyHereCount > 0) {
+                        Text(
+                            pluralStringResource(
+                                R.plurals.import_already_here,
+                                history.alreadyHereCount,
+                                history.alreadyHereCount,
+                            ),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                    }
+                } else {
+                    Text(
+                        stringResource(R.string.import_nothing_new),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            if (history.hasAnythingNew) {
+                TextButton(onClick = onConfirm) { Text(stringResource(R.string.import_confirm)) }
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(if (history.hasAnythingNew) R.string.action_cancel else R.string.action_close))
+            }
+        },
+    )
+}
+
+@Preview(name = "Import — history", showBackground = true, heightDp = 520)
+@Composable
+private fun IncomingHistoryPreview() {
+    PokerTrackerTheme {
+        IncomingHistoryDialog(
+            history = IncomingHistory(
+                gameCount = 12,
+                newGameCount = 10,
+                dateRange = "3 Jan 2026 – 22 Sep 2026",
+                newPlayerCount = 2,
+            ),
+            onConfirm = {},
+            onDismiss = {},
+        )
+    }
 }
 
 @Preview(name = "Receive — take over", showBackground = true, heightDp = 520)

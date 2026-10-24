@@ -626,4 +626,49 @@
     <string name="error_receive_scanner">Le scan n’est pas disponible sur ce téléphone. Demandez la partie sous forme de fichier.</string>
     <string name="error_receive_failed">Impossible de reprendre la partie</string>
 
+    <!-- Sharing history -->
+    <string name="action_close">Fermer</string>
+    <string name="share_button">Partager</string>
+    <string name="share_import">Importer</string>
+    <string name="share_export">Exporter</string>
+    <string name="import_title">Importer des parties</string>
+    <string name="import_body">Scannez le QR code ou ouvrez le fichier qu’un autre hôte a exporté de son historique.</string>
+    <string name="import_confirm_title">Importer les parties ?</string>
+    <string name="import_players_merge">Les joueurs portant le même nom que quelqu’un de votre liste sont rattachés à lui, et leurs résultats s’additionnent.</string>
+    <string name="import_nothing_new">Vous avez déjà toutes ces parties.</string>
+    <string name="import_confirm">Importer</string>
+    <string name="error_import_failed">Impossible d’importer les parties</string>
+    <string name="error_export_failed">Impossible de préparer les parties</string>
+    <string name="export_title">Exporter des parties</string>
+    <string name="export_select_all">Toutes les parties</string>
+    <string name="export_selected_of">%1$d sur %2$d</string>
+    <string name="export_choose">Choisissez des parties</string>
+    <string name="export_empty">Aucune partie terminée à exporter pour l’instant.</string>
+    <string name="export_instructions">Sur l’autre téléphone, ouvrez Homepoker Cashier, touchez Partager, puis Importer, et scannez ce code.</string>
+    <string name="export_too_big">Ces parties ne tiennent pas dans un seul QR code. Envoyez-les en fichier et ouvrez-le sur l’autre téléphone avec Partager, puis Importer.</string>
+    <string name="export_share_chooser">Envoyer les parties</string>
+    <string name="export_file_name">Parties de poker</string>
+    <string name="export_qr_description">QR code avec les parties choisies</string>
+    <string name="export_done">Terminé</string>
+    <plurals name="import_new_players">
+        <item quantity="one">%1$d nouveau joueur rejoindra votre liste.</item>
+        <item quantity="many">%1$d nouveaux joueurs rejoindront votre liste.</item>
+        <item quantity="other">%1$d nouveaux joueurs rejoindront votre liste.</item>
+    </plurals>
+    <plurals name="import_already_here">
+        <item quantity="one">%1$d partie est déjà sur ce téléphone et sera ignorée.</item>
+        <item quantity="many">%1$d parties sont déjà sur ce téléphone et seront ignorées.</item>
+        <item quantity="other">%1$d parties sont déjà sur ce téléphone et seront ignorées.</item>
+    </plurals>
+    <plurals name="message_games_imported">
+        <item quantity="one">%1$d partie importée</item>
+        <item quantity="many">%1$d parties importées</item>
+        <item quantity="other">%1$d parties importées</item>
+    </plurals>
+    <plurals name="export_button">
+        <item quantity="one">Exporter %1$d partie</item>
+        <item quantity="many">Exporter %1$d parties</item>
+        <item quantity="other">Exporter %1$d parties</item>
+    </plurals>
+
 </resources>

@@ -386,8 +386,31 @@ class PokerRepositoryImpl @Inject constructor(
         gameDao.findCopy(transfer.name.trim(), transfer.startedAt)
 
     override suspend fun importGame(transfer: GameTransfer, replacing: Long?): Long {
-        // Checked again here even though the codec already did: this is data from another phone,
-        // and the database is the last place a bad value can be kept out of.
+        requireImportable(transfer)
+        return database.withTransaction {
+            replacing?.let { gameDao.delete(it) }
+            insertTransfer(transfer)
+        }
+    }
+
+    override suspend fun importGames(transfers: List<GameTransfer>): Int {
+        transfers.forEach { requireImportable(it) }
+        return database.withTransaction {
+            // Looked up inside the transaction, so a game listed twice in the same batch is
+            // caught by the copy the first one just made.
+            transfers.count { transfer ->
+                val isNew = findCopyOf(transfer) == null
+                if (isNew) insertTransfer(transfer)
+                isNew
+            }
+        }
+    }
+
+    /**
+     * Checked again here even though the codec already did: this is data from another phone, and
+     * the database is the last place a bad value can be kept out of.
+     */
+    private fun requireImportable(transfer: GameTransfer) {
         require(transfer.name.isNotBlank() && !NameRules.isGameNameTooLong(transfer.name)) {
             "The game name is missing or too long"
         }
@@ -401,55 +424,55 @@ class PokerRepositoryImpl @Inject constructor(
         require(transfer.seats.all { !NameRules.isPlayerNameTooLong(it.player) }) {
             "A player name is too long"
         }
+    }
 
+    /** Writes one handed-over game. Only ever called inside a transaction. */
+    private suspend fun insertTransfer(transfer: GameTransfer): Long {
         val start = transfer.startedAt
-        return database.withTransaction {
-            replacing?.let { gameDao.delete(it) }
-            val gameId = gameDao.insert(
-                GameEntity(
-                    name = transfer.name.trim(),
-                    smallBlindMicros = transfer.smallBlindMicros,
-                    bigBlindMicros = transfer.bigBlindMicros,
-                    chipValueMicros = transfer.chipValueMicros,
-                    defaultBuyInMicros = transfer.defaultBuyInMicros,
-                    payoutRoundingMicros = transfer.payoutRoundingMicros,
-                    startedAt = start,
-                    endedAt = transfer.endedAfter?.let { start + it },
-                    status = if (transfer.isRunning) GameStatus.IN_PROGRESS else GameStatus.FINISHED,
-                    bombPotIntervalMinutes = transfer.bombPotIntervalMinutes,
-                    isFiretruckGame = transfer.isFiretruckGame,
-                    isRandomSeating = transfer.isRandomSeating,
+        val gameId = gameDao.insert(
+            GameEntity(
+                name = transfer.name.trim(),
+                smallBlindMicros = transfer.smallBlindMicros,
+                bigBlindMicros = transfer.bigBlindMicros,
+                chipValueMicros = transfer.chipValueMicros,
+                defaultBuyInMicros = transfer.defaultBuyInMicros,
+                payoutRoundingMicros = transfer.payoutRoundingMicros,
+                startedAt = start,
+                endedAt = transfer.endedAfter?.let { start + it },
+                status = if (transfer.isRunning) GameStatus.IN_PROGRESS else GameStatus.FINISHED,
+                bombPotIntervalMinutes = transfer.bombPotIntervalMinutes,
+                isFiretruckGame = transfer.isFiretruckGame,
+                isRandomSeating = transfer.isRandomSeating,
+            ),
+        )
+        transfer.seats.forEach { seat ->
+            val name = seat.player.trim()
+            // Someone the receiving host already knows keeps their history in one place;
+            // anyone new joins the roster, exactly as if they had been added by hand.
+            val playerId = playerDao.findByName(name)?.id
+                ?: playerDao.insert(PlayerEntity(name = name, createdAt = clock.nowMillis()))
+            val seatId = gamePlayerDao.insert(
+                GamePlayerEntity(
+                    gameId = gameId,
+                    playerId = playerId,
+                    joinedAt = start + seat.joinedAfter,
+                    cashedOutAt = seat.cashedOutAfter?.let { start + it },
+                    finalChipCount = seat.finalChips,
+                    tablePosition = seat.tablePosition,
                 ),
             )
-            transfer.seats.forEach { seat ->
-                val name = seat.player.trim()
-                // Someone the receiving host already knows keeps their history in one place;
-                // anyone new joins the roster, exactly as if they had been added by hand.
-                val playerId = playerDao.findByName(name)?.id
-                    ?: playerDao.insert(PlayerEntity(name = name, createdAt = clock.nowMillis()))
-                val seatId = gamePlayerDao.insert(
-                    GamePlayerEntity(
-                        gameId = gameId,
-                        playerId = playerId,
-                        joinedAt = start + seat.joinedAfter,
-                        cashedOutAt = seat.cashedOutAfter?.let { start + it },
-                        finalChipCount = seat.finalChips,
-                        tablePosition = seat.tablePosition,
-                    ),
+            buyInDao.insertAll(
+                seat.buyIns.map {
+                    BuyInEntity(gamePlayerId = seatId, amountMicros = it.amount, createdAt = start + it.after)
+                },
+            )
+            seat.returns.forEach {
+                chipReturnDao.insert(
+                    ChipReturnEntity(gamePlayerId = seatId, chips = it.amount, createdAt = start + it.after),
                 )
-                buyInDao.insertAll(
-                    seat.buyIns.map {
-                        BuyInEntity(gamePlayerId = seatId, amountMicros = it.amount, createdAt = start + it.after)
-                    },
-                )
-                seat.returns.forEach {
-                    chipReturnDao.insert(
-                        ChipReturnEntity(gamePlayerId = seatId, chips = it.amount, createdAt = start + it.after),
-                    )
-                }
             }
-            gameId
         }
+        return gameId
     }
 
     override suspend fun endGame(gameId: Long, seatsCountedAsZero: List<Long>) {

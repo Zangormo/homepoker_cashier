@@ -103,6 +103,34 @@ class GameTransferTest {
     }
 
     @Test
+    fun `a history survives the trip unchanged, every game in it`() {
+        val games = listOf(night().toTransfer(), night(players = 5).toTransfer().copy(name = "Friday"))
+
+        val decoded = GameTransferCodec.decode(GameTransferCodec.encodeHistory(games))
+
+        assertEquals(DecodedTransfer.History(games), decoded)
+    }
+
+    @Test
+    fun `a history from a newer app is refused rather than misread`() {
+        val newer = night().toTransfer().copy(version = GameTransfer.FORMAT_VERSION + 1)
+
+        assertEquals(DecodedTransfer.TooNew, GameTransferCodec.decode(GameTransferCodec.encodeHistory(listOf(newer))))
+    }
+
+    @Test
+    fun `a history with one broken game is turned away whole`() {
+        val games = listOf(night().toTransfer(), night().toTransfer().copy(bigBlindMicros = 1))
+
+        assertEquals(DecodedTransfer.NotAGame, GameTransferCodec.decode(GameTransferCodec.encodeHistory(games)))
+    }
+
+    @Test
+    fun `an empty history is not a history`() {
+        assertEquals(DecodedTransfer.NotAGame, GameTransferCodec.decode(GameTransferCodec.encodeHistory(emptyList())))
+    }
+
+    @Test
     fun `the table total nets off chips sold back to the bank`() {
         val transfer = night(players = 1, rebuysEach = 0).toTransfer()
 

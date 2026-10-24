@@ -73,6 +73,7 @@ fun HistoryScreen(
     onNewGame: () -> Unit,
     onResumeGame: (Long) -> Unit,
     onOpenSettlement: (Long) -> Unit,
+    onExport: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = hiltViewModel(),
 ) {
@@ -81,8 +82,13 @@ fun HistoryScreen(
 
     val context = LocalContext.current
     var choosingHowToReceive by rememberSaveable { mutableStateOf(false) }
+    var choosingHowToImport by rememberSaveable { mutableStateOf(false) }
     var menuOpen by rememberSaveable { mutableStateOf(false) }
-    BackHandler(enabled = menuOpen) { menuOpen = false }
+    var shareOpen by rememberSaveable { mutableStateOf(false) }
+    BackHandler(enabled = menuOpen || shareOpen) {
+        menuOpen = false
+        shareOpen = false
+    }
     val receiver = rememberGameReceiver(
         onText = viewModel::onTransferReceived,
         onScannerUnavailable = viewModel::onScannerUnavailable,
@@ -123,7 +129,10 @@ fun HistoryScreen(
         floatingActionButton = {
             NewGameMenu(
                 expanded = menuOpen,
-                onToggle = { menuOpen = !menuOpen },
+                onToggle = {
+                    menuOpen = !menuOpen
+                    shareOpen = false
+                },
                 onCreate = {
                     menuOpen = false
                     onNewGame()
@@ -136,7 +145,7 @@ fun HistoryScreen(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { padding ->
-        Box {
+        Box(Modifier.fillMaxSize()) {
             when {
                 state.isLoading -> Centered(Modifier.padding(padding)) { CircularProgressIndicator() }
                 state.isEmpty -> Centered(Modifier.padding(padding)) { EmptyHistory() }
@@ -148,21 +157,64 @@ fun HistoryScreen(
                     modifier = Modifier.padding(padding),
                 )
             }
-            NewGameMenuScrim(visible = menuOpen, onDismiss = { menuOpen = false })
+            NewGameMenuScrim(
+                visible = menuOpen || shareOpen,
+                onDismiss = {
+                    menuOpen = false
+                    shareOpen = false
+                },
+            )
+            // Not in the Scaffold's button slot, which holds one button in one corner: this one
+            // sits opposite new game, lifted by the same padding so the two line up.
+            ShareMenu(
+                expanded = shareOpen,
+                onToggle = {
+                    shareOpen = !shareOpen
+                    menuOpen = false
+                },
+                onImport = {
+                    shareOpen = false
+                    choosingHowToImport = true
+                },
+                onExport = {
+                    shareOpen = false
+                    onExport()
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(padding)
+                    .padding(16.dp),
+            )
         }
     }
 
-    if (choosingHowToReceive) {
+    if (choosingHowToReceive || choosingHowToImport) {
+        // One receiver for both: it reads a single game or a whole history, whichever arrives.
+        val importing = choosingHowToImport
+        val close = {
+            choosingHowToReceive = false
+            choosingHowToImport = false
+        }
         ReceiveGameDialog(
+            title = stringResource(if (importing) R.string.import_title else R.string.receive_title),
+            body = stringResource(if (importing) R.string.import_body else R.string.receive_body),
             onScan = {
-                choosingHowToReceive = false
+                close()
                 receiver.scan()
             },
             onOpenFile = {
-                choosingHowToReceive = false
+                close()
                 receiver.openFile()
             },
-            onDismiss = { choosingHowToReceive = false },
+            onDismiss = close,
+        )
+    }
+
+    state.incomingHistory?.let { history ->
+        IncomingHistoryDialog(
+            history = history,
+            onConfirm = viewModel::onConfirmIncomingHistory,
+            onDismiss = viewModel::onDismissIncomingHistory,
         )
     }
 

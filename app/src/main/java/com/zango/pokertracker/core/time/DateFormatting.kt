@@ -17,3 +17,11 @@ fun formatGameDate(
     locale: Locale = Locale.getDefault(),
 ): String = DateTimeFormatter.ofPattern("d MMM yyyy · HH:mm", locale)
     .format(Instant.ofEpochMilli(epochMillis).atZone(zone))
+
+/** Just the day, as "30 Aug 2026", for spans of games where the hour would only be noise. */
+fun formatGameDay(
+    epochMillis: Long,
+    zone: ZoneId = ZoneId.systemDefault(),
+    locale: Locale = Locale.getDefault(),
+): String = DateTimeFormatter.ofPattern("d MMM yyyy", locale)
+    .format(Instant.ofEpochMilli(epochMillis).atZone(zone))

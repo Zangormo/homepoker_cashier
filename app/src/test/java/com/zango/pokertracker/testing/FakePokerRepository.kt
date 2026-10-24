@@ -280,6 +280,17 @@ class FakePokerRepository(private val clock: TestClock = TestClock()) : PokerRep
         return nextId++
     }
 
+    override suspend fun importGames(transfers: List<GameTransfer>): Int {
+        importFailure?.let { throw it }
+        val added = transfers.filter { findCopyOf(it) == null }
+        writes += "importGames(${added.size} of ${transfers.size})"
+        added.forEach {
+            imported += it to null
+            copies[it.name to it.startedAt] = nextId++
+        }
+        return added.size
+    }
+
     /** Mirrors the real repository: only seats with a counted stack are closed out. */
     override suspend fun endGame(gameId: Long, seatsCountedAsZero: List<Long>) {
         writes += "endGame($gameId)"

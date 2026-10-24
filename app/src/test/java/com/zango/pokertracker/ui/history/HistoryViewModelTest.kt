@@ -9,6 +9,7 @@ import com.zango.pokertracker.domain.model.Fixture
 import com.zango.pokertracker.domain.model.GameStatus
 import com.zango.pokertracker.domain.model.GameSummary
 import com.zango.pokertracker.domain.model.GameSnapshot
+import com.zango.pokertracker.domain.model.Player
 import com.zango.pokertracker.domain.transfer.GameTransferCodec
 import com.zango.pokertracker.domain.transfer.toTransfer
 import com.zango.pokertracker.testing.FakePokerRepository
@@ -343,5 +344,56 @@ class HistoryViewModelTest {
 
         assertNull(viewModel.stateWhere { it.incoming == null }.incoming)
         assertTrue(repository.imported.isEmpty())
+    }
+
+    private fun exportedHistory(vararg games: Pair<String, Long>) = GameTransferCodec.encodeHistory(
+        games.map { (name, startedAt) ->
+            GameSnapshot(
+                game = Fixture.game().copy(name = name, startedAt = startedAt, status = GameStatus.FINISHED),
+                seats = listOf(Fixture.seat(1, "Anna"), Fixture.seat(2, "Boris")),
+            ).toTransfer()
+        },
+    )
+
+    @Test
+    fun `an imported history waits for the host, saying what is new`() = runTest {
+        // Anna is already known, in another case; Boris is not.
+        repository.roster.value = listOf(Player(id = 1, name = "anna", createdAt = 0L))
+        repository.copies["Thursday" to EVENING] = 77L
+        val viewModel = HistoryViewModel(repository)
+
+        viewModel.onTransferReceived(exportedHistory("Thursday" to EVENING, "Friday" to EVENING + 24 * HOUR))
+
+        val incoming = viewModel.stateWhere { it.incomingHistory != null }.incomingHistory!!
+        assertEquals(2, incoming.gameCount)
+        assertEquals(1, incoming.newGameCount)
+        assertEquals(1, incoming.alreadyHereCount)
+        assertEquals(1, incoming.newPlayerCount)
+        assertTrue(repository.imported.isEmpty())
+    }
+
+    @Test
+    fun `confirming a history imports only the games this phone lacks`() = runTest {
+        repository.copies["Thursday" to EVENING] = 77L
+        val viewModel = HistoryViewModel(repository)
+        viewModel.onTransferReceived(exportedHistory("Thursday" to EVENING, "Friday" to EVENING + 24 * HOUR))
+        viewModel.stateWhere { it.incomingHistory != null }
+
+        viewModel.onConfirmIncomingHistory()
+
+        val event = viewModel.events.first() as HistoryEvent.Message
+        assertEquals(UiText.plural(R.plurals.message_games_imported, 1, 1), event.text)
+        assertEquals(listOf("Friday"), repository.imported.map { it.first.name })
+        assertNull(viewModel.stateWhere { it.incomingHistory == null }.incomingHistory)
+    }
+
+    @Test
+    fun `a history this phone already has offers nothing to import`() = runTest {
+        repository.copies["Thursday" to EVENING] = 77L
+        val viewModel = HistoryViewModel(repository)
+
+        viewModel.onTransferReceived(exportedHistory("Thursday" to EVENING))
+
+        assertFalse(viewModel.stateWhere { it.incomingHistory != null }.incomingHistory!!.hasAnythingNew)
     }
 }
