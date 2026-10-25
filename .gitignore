@@ -43,3 +43,6 @@ Thumbs.db
 *.p12
 *.pem
 /.claude/notify-done.ps1
+/CLAUDE.md
+/.claude/hooks/check-docs.sh
+/.claude/settings.json
