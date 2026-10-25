@@ -187,6 +187,8 @@
     <string name="settlement_game_missing">Эта игра больше недоступна.</string>
     <string name="settlement_share_subject">%1$s — расчёт</string>
     <string name="settlement_share_chooser">Отправить расчёт</string>
+    <string name="settlement_share_footer">Расчёт сделан в Homepoker Cashier - %1$s</string>
+    <string name="settlement_share_footer_link">загляните в Google Play!</string>
     <string name="settlement_share">Отправить</string>
     <string name="settlement_copy">Копировать</string>
     <string name="settlement_copied">Скопировано</string>

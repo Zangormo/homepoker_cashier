@@ -188,6 +188,8 @@
     <string name="settlement_game_missing">Esta partida ya no está disponible.</string>
     <string name="settlement_share_subject">%1$s — liquidación</string>
     <string name="settlement_share_chooser">Compartir liquidación</string>
+    <string name="settlement_share_footer">Liquidación hecha con Homepoker Cashier - %1$s</string>
+    <string name="settlement_share_footer_link">¡pruébala en Google Play!</string>
     <string name="settlement_share">Compartir</string>
     <string name="settlement_copy">Copiar</string>
     <string name="settlement_copied">Copiado</string>

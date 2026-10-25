@@ -18,6 +18,8 @@ import com.zango.pokertracker.domain.settlement.notes
 import com.zango.pokertracker.domain.settlement.settle
 import com.zango.pokertracker.testing.sentence
 import com.zango.pokertracker.domain.settlement.shareLines
+import com.zango.pokertracker.domain.settlement.ShareFooter
+import com.zango.pokertracker.domain.settlement.ShareLink
 import com.zango.pokertracker.ui.common.toResultRows
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -206,8 +208,13 @@ class WholeNightTest {
             lines.drop(2).count { it is UiText.Res && it.id == R.string.settlement_pays },
         )
         // Nothing to caveat: the table reconciled and every figure is payable, so the message
-        // is the header, the blank line and the three instructions — and nothing else.
-        assertEquals(5, lines.size)
+        // is the header, the three instructions with blank lines between, and the footer — and
+        // nothing else.
+        assertEquals(
+            listOf(UiText.Raw(""), ShareFooter, ShareLink),
+            lines.takeLast(3),
+        )
+        assertEquals(10, lines.size)
     }
 
     // -----------------------------------------------------------------------------------------

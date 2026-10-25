@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- The one folder a handed-over game file is written to before it is shared. -->
+<!-- The folders files are written to before they are shared: handed-over games, and the
+     results image attached to a shared settlement. -->
 <paths>
     <cache-path name="handoff" path="handoff/" />
+    <cache-path name="share" path="share/" />
 </paths>

@@ -228,6 +228,8 @@
     <!-- %1$s: game name. Used as the subject line when sharing. -->
     <string name="settlement_share_subject">%1$s — settlement</string>
     <string name="settlement_share_chooser">Share settlement</string>
+    <string name="settlement_share_footer">Settlement was made via Homepoker Cashier - %1$s</string>
+    <string name="settlement_share_footer_link">check it out on Google Play!</string>
     <string name="settlement_share">Share</string>
     <string name="settlement_copy">Copy</string>
     <string name="settlement_copied">Copied</string>

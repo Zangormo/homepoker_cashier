@@ -124,8 +124,9 @@ class SettlementFromGameTest {
                 UiText.of(R.string.settlement_share_subject, "Thursday"),
                 UiText.Raw(""),
                 UiText.of(R.string.settlement_pays, "Anna", "Boris", UiText.Cash("1.20")),
+                UiText.Raw(""),
                 UiText.of(R.string.settlement_pays, "Anna", "Chris", UiText.Cash("0.30")),
-            ),
+            ) + listOf(UiText.Raw(""), ShareFooter, ShareLink),
             lines,
         )
     }
@@ -145,7 +146,7 @@ class SettlementFromGameTest {
                 UiText.of(R.string.settlement_share_subject, "Thursday"),
                 UiText.Raw(""),
                 UiText.of(R.string.settlement_everyone_even),
-            ),
+            ) + listOf(UiText.Raw(""), ShareFooter, ShareLink),
             snapshot.settle().shareLines("Thursday"),
         )
     }

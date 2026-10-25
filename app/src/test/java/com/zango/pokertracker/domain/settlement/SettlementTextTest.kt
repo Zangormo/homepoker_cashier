@@ -44,6 +44,9 @@ class SettlementTextTest {
     private val header = UiText.of(R.string.settlement_share_subject, "Thursday")
     private val blank = UiText.Raw("")
 
+    /** Every message ends the same way: a blank line, the footer, and the store address. */
+    private val footer = listOf(blank, ShareFooter, ShareLink)
+
     // -----------------------------------------------------------------------------------------
     // One instruction
     // -----------------------------------------------------------------------------------------
@@ -82,13 +85,13 @@ class SettlementTextTest {
                 header,
                 blank,
                 UiText.of(R.string.settlement_pays, "Anna", "Boris", UiText.Cash("4.50")),
-            ),
+            ) + footer,
             lines,
         )
     }
 
     @Test
-    fun `every payment gets its own line, in the order they were worked out`() {
+    fun `every payment gets its own line, parted by a blank one, in the order they were worked out`() {
         val lines = settlement(
             listOf(
                 Payment(anna, boris, Money(4_500_000)),
@@ -101,10 +104,78 @@ class SettlementTextTest {
                 header,
                 blank,
                 UiText.of(R.string.settlement_pays, "Anna", "Boris", UiText.Cash("4.50")),
+                blank,
                 UiText.of(R.string.settlement_pays, "Chris", "Boris", UiText.Cash("1.20")),
-            ),
+            ) + footer,
             lines,
         )
+    }
+
+    /**
+     * The link text is a separate resource so the screen can make just those words the link where
+     * the receiving app reads HTML; everywhere else the bare address underneath is the link.
+     */
+    @Test
+    fun `the message ends by pointing at the app on Google Play`() {
+        val lines = settlement(listOf(Payment(anna, boris, Money(4_500_000)))).shareLines("Thursday")
+
+        assertEquals(
+            listOf(
+                blank,
+                UiText.of(R.string.settlement_share_footer, UiText.of(R.string.settlement_share_footer_link)),
+                UiText.Raw("https://play.google.com/store/apps/details?id=com.zango.pokertracker"),
+            ),
+            lines.takeLast(3),
+        )
+    }
+
+    /** The share is sent from debug builds too, and a debug package has no store page. */
+    @Test
+    fun `the store link always points at the release package`() {
+        assertEquals("https://play.google.com/store/apps/details?id=com.zango.pokertracker", PLAY_STORE_URL)
+        assertEquals(UiText.Raw(PLAY_STORE_URL), ShareLink)
+    }
+
+    @Test
+    fun `the footer comes once, at the very end, however long the message`() {
+        val lines = settlement(
+            payments = listOf(
+                Payment(anna, boris, Money(4_500_000)),
+                Payment(chris, boris, Money(1_200_000)),
+                Payment(chris, anna, Money(300_000)),
+            ),
+            imbalance = Money(-60_000),
+        ).shareLines("Thursday")
+
+        assertEquals(1, lines.count { it == ShareFooter })
+        assertEquals(1, lines.count { it == ShareLink })
+        assertEquals(footer, lines.takeLast(3))
+    }
+
+    /** Three payments need two blank lines between them, not three: none after the last one. */
+    @Test
+    fun `payments are parted by blank lines with none before the first or doubled after the last`() {
+        val lines = settlement(
+            listOf(
+                Payment(anna, boris, Money(4_500_000)),
+                Payment(chris, boris, Money(1_200_000)),
+                Payment(chris, anna, Money(300_000)),
+            ),
+        ).shareLines("Thursday")
+
+        assertEquals(
+            listOf(
+                header,
+                blank,
+                UiText.of(R.string.settlement_pays, "Anna", "Boris", UiText.Cash("4.50")),
+                blank,
+                UiText.of(R.string.settlement_pays, "Chris", "Boris", UiText.Cash("1.20")),
+                blank,
+                UiText.of(R.string.settlement_pays, "Chris", "Anna", UiText.Cash("0.30")),
+            ) + footer,
+            lines,
+        )
+        assertTrue(lines.zipWithNext().none { (a, b) -> a == blank && b == blank })
     }
 
     @Test
@@ -116,7 +187,7 @@ class SettlementTextTest {
                 UiText.of(R.string.settlement_share_subject, "Quiet one"),
                 blank,
                 UiText.of(R.string.settlement_everyone_even),
-            ),
+            ) + footer,
             lines,
         )
     }
@@ -226,7 +297,7 @@ class SettlementTextTest {
                     UiText.of(R.string.note_imbalance_short),
                 ),
                 UiText.of(R.string.note_still_owes, "Boris", UiText.Cash("0.06")),
-            ),
+            ) + footer,
             lines,
         )
     }

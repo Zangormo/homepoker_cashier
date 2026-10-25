@@ -43,7 +43,7 @@ All game data stays on the phone. There is no account and no server. Games move 
 - **Game setup.** Set the blinds by hand or pick from a list of common stakes. Chip value can be worked out from the chip markings. The buy-in can be set in big blinds or cash, with per-player overrides and an optional random seating order.
 - **Live game.** Record rebuys, cash-outs and chips sold back to the bank, with undo. Players can join mid-game, and seats can be swapped on a table view. The screen also shows elapsed time and total buy-ins.
 - **End of game check.** Enter the final chip counts. The app shows whether every chip is accounted for, or how many are missing or extra.
-- **Settlement.** A short list of "A pays B" payments, rounded to the smallest note or coin you use. Any rounding difference is shown. Share or copy the list, and mark each payment as paid.
+- **Settlement.** A short list of "A pays B" payments, rounded to the smallest note or coin you use. Any rounding difference is shown. Share the list with a picture of the results, or copy it, and mark each payment as paid.
 - **Side games.** A bomb pot timer on the game screen: a countdown, and a full-screen announcement with a vibration when one is due. It runs while the app is open; nothing is sent when it is closed. There is also a firetruck tracker (three pots in a row).
 - **Game handover.** Pass a running game to another host's phone with a QR code, or as a file when the game is too big for one code.
 - **History sharing.** Export finished games to another phone, or import someone else's, by QR code or file. Players with the same name are merged so their results add up.
@@ -170,8 +170,8 @@ The result of the night.
 - **Payments**: the shortest list of "*A* pays *B* amount" lines that squares everyone up. Tap a payment to tick it off as paid. A counter shows "*2 of 5 paid*", and the screen says **Not fully settled** until all are ticked. If everyone broke even, the screen says so.
 - Notes under the list explain any rounding ("*Rounded to the nearest 1. Alex absorbed 0.40.*") and any chip mismatch.
 - **Results**: the same five-column table as on the End game screen.
-- **Share**: sends the payment list as text to any app, for example the poker group chat.
-- **Copy**: copies the same text to the clipboard.
+- **Share**: sends the payments to any app, for example the poker group chat. The text starts with "*Game name* — settlement", puts each "*A* pays *B* amount" on its own line with a blank line between them, and ends with "Settlement was made via Homepoker Cashier - check it out on Google Play!" and a link to the app on Google Play. A picture of the Results table goes with it: the game name, the table, and the app name with the app logo in the bottom right corner. Apps that only take text get the text alone.
+- **Copy**: copies the same text to the clipboard, without the picture.
 - **Back to history** returns to the Game hub.
 
 Right after a game ends, while ads are still on, a dialog may ask for a small donation: **Enjoying Homepoker Cashier?** with **Donate now** and **No, thanks**. If a full-screen ad has just been shown, the dialog reads **Tired of ads like that one?** instead. **Donate now** opens the Remove ads purchase in Settings. The dialog is shown once per finished game and never to someone who has already paid.
@@ -362,5 +362,9 @@ This project has no open-source license. The code is published for reference onl
 
 ## Author
 
-<!-- TODO: add your name and contact details (GitHub profile, email or website). -->
-Ilja Birjukov
+Ilja Birjukov <br>
+Personal website: https://zangormo.github.io/ <br>
+Github: https://github.com/Zangormo <br>
+LinkedIn: https://www.linkedin.com/in/ilja-birjukovs/ <br>
+E-mail: birjukovs06@gmail.com
+

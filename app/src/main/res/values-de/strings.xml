@@ -187,6 +187,8 @@
     <string name="settlement_game_missing">Dieses Spiel ist nicht mehr verfügbar.</string>
     <string name="settlement_share_subject">%1$s – Abrechnung</string>
     <string name="settlement_share_chooser">Abrechnung teilen</string>
+    <string name="settlement_share_footer">Abrechnung erstellt mit Homepoker Cashier - %1$s</string>
+    <string name="settlement_share_footer_link">jetzt bei Google Play ansehen!</string>
     <string name="settlement_share">Teilen</string>
     <string name="settlement_copy">Kopieren</string>
     <string name="settlement_copied">Kopiert</string>

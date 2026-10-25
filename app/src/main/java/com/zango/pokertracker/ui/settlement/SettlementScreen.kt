@@ -1,7 +1,7 @@
 package com.zango.pokertracker.ui.settlement
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -43,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
@@ -109,6 +110,8 @@ fun SettlementScreen(
     // Built here rather than in the ViewModel: the lines are resources, and this is the only
     // layer that knows which language to render them in.
     val shareText = state.shareLines.joinToString(separator = "\n") { it.resolve(context) }
+    // Holds the results picture that goes out with a share; see ShareImageSource.
+    val shareImage = rememberGraphicsLayer()
 
     Scaffold(
         modifier = modifier,
@@ -140,12 +143,11 @@ fun SettlementScreen(
             if (!state.isLoading && !state.isMissing) {
                 ShareBar(
                     onShare = {
-                        val intent = Intent(Intent.ACTION_SEND).apply {
-                            type = "text/plain"
-                            putExtra(Intent.EXTRA_SUBJECT, shareSubject)
-                            putExtra(Intent.EXTRA_TEXT, shareText)
+                        scope.launch {
+                            // A failed picture should never cost the host the payment list.
+                            val image = runCatching { shareImage.writeSharePng(context) }.getOrNull()
+                            shareSettlement(context, state.shareLines, shareSubject, shareChooser, image)
                         }
-                        context.startActivity(Intent.createChooser(intent, shareChooser))
                     },
                     onCopy = {
                         clipboard.setText(AnnotatedString(shareText))
@@ -162,12 +164,14 @@ fun SettlementScreen(
                 Text(stringResource(R.string.settlement_game_missing))
             }
 
-            else -> SettlementContent(
-                state = state,
-                onDone = { onDone(state.isPaidUp) },
-                modifier = Modifier.padding(padding),
-                onPaymentToggled = viewModel::onPaymentToggled,
-            )
+            else -> Box(modifier = Modifier.padding(padding)) {
+                ShareImageSource(state.gameName, state.results, shareImage)
+                SettlementContent(
+                    state = state,
+                    onDone = { onDone(state.isPaidUp) },
+                    onPaymentToggled = viewModel::onPaymentToggled,
+                )
+            }
         }
     }
 }

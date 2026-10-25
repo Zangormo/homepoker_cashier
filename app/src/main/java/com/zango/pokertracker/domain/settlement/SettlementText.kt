@@ -12,6 +12,11 @@ import com.zango.pokertracker.core.text.UiText
  * The lines are named rather than written, because this runs in the domain and has no way to know
  * what language the phone is in. The screen resolves them and joins them with newlines, which is
  * also why this returns the parts rather than a finished block of text.
+ *
+ * Payments are parted by blank lines so each one stands out in a chat bubble. The message ends
+ * with [ShareFooter] and the store address on a line of its own: most chat apps only turn a bare
+ * address into a link, so the screen swaps the two for a real link only where the receiving app
+ * understands one.
  */
 fun Settlement.shareLines(gameName: String): List<UiText> = buildList {
     add(UiText.of(R.string.settlement_share_subject, gameName))
@@ -20,7 +25,10 @@ fun Settlement.shareLines(gameName: String): List<UiText> = buildList {
     if (payments.isEmpty()) {
         add(UiText.of(R.string.settlement_everyone_even))
     } else {
-        payments.forEach { add(it.toSentence()) }
+        payments.forEachIndexed { index, payment ->
+            if (index > 0) add(BLANK)
+            add(payment.toSentence())
+        }
     }
 
     val notes = notes()
@@ -28,7 +36,23 @@ fun Settlement.shareLines(gameName: String): List<UiText> = buildList {
         add(BLANK)
         addAll(notes)
     }
+
+    add(BLANK)
+    add(ShareFooter)
+    add(ShareLink)
 }
+
+/** The app's page on Google Play: always the release package, so a debug build links there too. */
+const val PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.zango.pokertracker"
+
+/** "Settlement was made via Homepoker Cashier - check it out on Google Play!" */
+val ShareFooter: UiText = UiText.of(
+    R.string.settlement_share_footer,
+    UiText.of(R.string.settlement_share_footer_link),
+)
+
+/** The store address under [ShareFooter], for apps that only link a bare address. */
+val ShareLink: UiText = UiText.Raw(PLAY_STORE_URL)
 
 /** "Anna pays Boris €4.50" — a whole instruction in one line, no interpretation required. */
 fun Payment.toSentence(): UiText =

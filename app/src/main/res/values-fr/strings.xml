@@ -188,6 +188,8 @@
     <string name="settlement_game_missing">Cette partie n’est plus disponible.</string>
     <string name="settlement_share_subject">%1$s — règlement</string>
     <string name="settlement_share_chooser">Partager le règlement</string>
+    <string name="settlement_share_footer">Règlement fait avec Homepoker Cashier - %1$s</string>
+    <string name="settlement_share_footer_link">à découvrir sur Google Play&#160;!</string>
     <string name="settlement_share">Partager</string>
     <string name="settlement_copy">Copier</string>
     <string name="settlement_copied">Copié</string>

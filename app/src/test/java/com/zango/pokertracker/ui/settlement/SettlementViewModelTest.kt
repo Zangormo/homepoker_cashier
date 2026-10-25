@@ -10,6 +10,8 @@ import com.zango.pokertracker.domain.model.GameSnapshot
 import com.zango.pokertracker.domain.model.GameStatus
 import com.zango.pokertracker.domain.model.Seat
 import com.zango.pokertracker.domain.model.SettledPayment
+import com.zango.pokertracker.domain.settlement.ShareFooter
+import com.zango.pokertracker.domain.settlement.ShareLink
 import com.zango.pokertracker.testing.FakePokerRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -164,7 +166,7 @@ class SettlementViewModelTest {
                 UiText.of(R.string.settlement_share_subject, "Thursday"),
                 UiText.Raw(""),
                 UiText.of(R.string.settlement_pays, "Boris", "Anna", UiText.Cash("0.50")),
-            ),
+            ) + listOf(UiText.Raw(""), ShareFooter, ShareLink),
             state().shareLines,
         )
     }
