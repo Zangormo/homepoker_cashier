@@ -608,6 +608,8 @@
     <string name="share_button">Teilen</string>
     <string name="share_import">Importieren</string>
     <string name="share_export">Exportieren</string>
+    <string name="share_import_hint">Verlauf beendeter Spiele von einem anderen Handy hinzufügen</string>
+    <string name="share_export_hint">Verlauf beendeter Spiele an ein anderes Handy senden</string>
     <string name="import_title">Spiele importieren</string>
     <string name="import_body">Scanne den QR-Code oder öffne die Datei, die ein anderer Gastgeber aus seinem Verlauf exportiert hat.</string>
     <string name="import_confirm_title">Spiele importieren?</string>
@@ -617,6 +619,7 @@
     <string name="error_import_failed">Die Spiele konnten nicht importiert werden</string>
     <string name="error_export_failed">Die Spiele konnten nicht vorbereitet werden</string>
     <string name="export_title">Spiele exportieren</string>
+    <string name="export_intro">Jedes beendete Spiel geht mit seinen Spielern, Buy-ins und Chips mit, damit Ergebnisse und Statistiken auf dem anderen Handy gleich sind. Laufende Spiele und Bezahlt-Haken bleiben hier.</string>
     <string name="export_select_all">Alle Spiele</string>
     <string name="export_selected_of">%1$d von %2$d</string>
     <string name="export_choose">Spiele auswählen</string>

@@ -667,6 +667,8 @@
     <string name="share_button">Поделиться</string>
     <string name="share_import">Импорт</string>
     <string name="share_export">Экспорт</string>
+    <string name="share_import_hint">Добавить историю завершённых игр с другого телефона</string>
+    <string name="share_export_hint">Отправить историю завершённых игр на другой телефон</string>
     <string name="import_title">Импорт игр</string>
     <string name="import_body">Отсканируйте QR-код или откройте файл, который другой хост экспортировал из своей истории.</string>
     <string name="import_confirm_title">Импортировать игры?</string>
@@ -676,6 +678,7 @@
     <string name="error_import_failed">Не удалось импортировать игры</string>
     <string name="error_export_failed">Не удалось подготовить игры</string>
     <string name="export_title">Экспорт игр</string>
+    <string name="export_intro">Каждая завершённая игра уходит вместе с игроками, бай-инами и фишками, поэтому результаты и статистика на другом телефоне совпадут. Идущие игры и отметки об оплате остаются здесь.</string>
     <string name="export_select_all">Все игры</string>
     <string name="export_selected_of">%1$d из %2$d</string>
     <string name="export_choose">Выберите игры</string>

@@ -762,6 +762,8 @@
     <string name="share_button">Share</string>
     <string name="share_import">Import</string>
     <string name="share_export">Export</string>
+    <string name="share_import_hint">Add finished games history from other phone</string>
+    <string name="share_export_hint">Send finished games history to another phone</string>
     <string name="import_title">Import games</string>
     <string name="import_body">Scan the QR code or open the file another host exported from their history.</string>
     <string name="import_confirm_title">Import games?</string>
@@ -771,6 +773,7 @@
     <string name="error_import_failed">Could not import the games</string>
     <string name="error_export_failed">Could not prepare the games</string>
     <string name="export_title">Export games</string>
+    <string name="export_intro">Each finished game goes with its players, buy-ins and chip counts, so results and stats match on the other phone. Games still running and paid ticks stay here.</string>
     <string name="export_select_all">All games</string>
     <string name="export_selected_of">%1$d of %2$d</string>
     <string name="export_choose">Choose games</string>

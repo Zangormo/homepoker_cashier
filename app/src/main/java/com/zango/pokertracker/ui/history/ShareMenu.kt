@@ -25,9 +25,10 @@ import com.zango.pokertracker.R
 
 /**
  * The history's way in and out: import games another host exported, or export some of this
- * phone's own. It mirrors the new-game button from the opposite corner, turning into a close
- * button while the two options rise out of it, and stays in the quieter colour because the
- * green belongs to starting a game.
+ * phone's own. Each option says in a quiet second line what it moves and which way, because
+ * "Import" and "Export" alone do not say what. It mirrors the new-game button from the opposite
+ * corner, turning into a close button while the two options rise out of it, and stays in the
+ * quieter colour because the green belongs to starting a game.
  */
 @Composable
 fun ShareMenu(
@@ -53,6 +54,7 @@ fun ShareMenu(
             visible = expanded,
             delayMillis = STAGGER_MILLIS,
             label = stringResource(R.string.share_import),
+            description = stringResource(R.string.share_import_hint),
             icon = Icons.Filled.Download,
             primary = false,
             onClick = onImport,
@@ -62,6 +64,7 @@ fun ShareMenu(
             visible = expanded,
             delayMillis = 0,
             label = stringResource(R.string.share_export),
+            description = stringResource(R.string.share_export_hint),
             icon = Icons.Filled.Upload,
             primary = false,
             onClick = onExport,

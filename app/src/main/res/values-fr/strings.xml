@@ -633,6 +633,8 @@
     <string name="share_button">Partager</string>
     <string name="share_import">Importer</string>
     <string name="share_export">Exporter</string>
+    <string name="share_import_hint">Ajouter l’historique des parties terminées d’un autre téléphone</string>
+    <string name="share_export_hint">Envoyer l’historique des parties terminées vers un autre téléphone</string>
     <string name="import_title">Importer des parties</string>
     <string name="import_body">Scannez le QR code ou ouvrez le fichier qu’un autre hôte a exporté de son historique.</string>
     <string name="import_confirm_title">Importer les parties ?</string>
@@ -642,6 +644,7 @@
     <string name="error_import_failed">Impossible d’importer les parties</string>
     <string name="error_export_failed">Impossible de préparer les parties</string>
     <string name="export_title">Exporter des parties</string>
+    <string name="export_intro">Chaque partie terminée part avec ses joueurs, ses caves et ses jetons, pour que les résultats et les statistiques soient les mêmes sur l’autre téléphone. Les parties en cours et les paiements cochés restent ici.</string>
     <string name="export_select_all">Toutes les parties</string>
     <string name="export_selected_of">%1$d sur %2$d</string>
     <string name="export_choose">Choisissez des parties</string>

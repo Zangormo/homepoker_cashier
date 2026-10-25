@@ -203,6 +203,7 @@ class ResponsiveScreensTest {
             Screen("07-players", Routes.PLAYERS),
             Screen("08-player", Routes.player(players[0].id)),
             Screen("09-settings", Routes.SETTINGS),
+            Screen("10-export", Routes.EXPORT),
         )
     }
 

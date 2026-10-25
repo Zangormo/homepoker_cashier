@@ -16,12 +16,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,6 +37,9 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.unit.dp
 import com.zango.pokertracker.R
 import com.zango.pokertracker.ui.theme.PokerTheme
@@ -42,6 +48,9 @@ internal const val OPEN_MILLIS = 220
 
 /** How far behind the one below it each option starts, so they rise in a quick cascade. */
 internal const val STAGGER_MILLIS = 50
+
+/** How wide a menu option's description may run before it wraps. */
+private val MaxDescriptionWidth = 260.dp
 
 /**
  * "New game" opens into two ways of getting a game: set one up, or load one another host handed
@@ -87,7 +96,11 @@ fun NewGameMenu(
             icon = {
                 Icon(
                     Icons.Filled.Add,
-                    contentDescription = if (expanded) stringResource(R.string.action_cancel) else null,
+                    // Material hides the text beside it from accessibility, so the icon names
+                    // the button.
+                    contentDescription = stringResource(
+                        if (expanded) R.string.action_cancel else R.string.history_new_game,
+                    ),
                     modifier = Modifier.rotate(rotation),
                 )
             },
@@ -99,6 +112,10 @@ fun NewGameMenu(
 /**
  * One option rising out of a floating button. [origin] is the corner it grows from: bottom right
  * over the new-game button, bottom left over the share button.
+ *
+ * [description] is a quieter second line saying what the option does, for a label too short to
+ * tell on its own. It is capped in width so a long translation wraps instead of stretching the
+ * pill across the screen.
  */
 @Composable
 internal fun MenuOption(
@@ -109,6 +126,7 @@ internal fun MenuOption(
     primary: Boolean,
     onClick: () -> Unit,
     origin: TransformOrigin = TransformOrigin(1f, 1f),
+    description: String? = null,
 ) {
     AnimatedVisibility(
         visible = visible,
@@ -122,8 +140,32 @@ internal fun MenuOption(
     ) {
         ExtendedFloatingActionButton(
             onClick = onClick,
+            // Material hides an extended button's text from accessibility and expects the icon to
+            // name it, so the label and description are given to the button itself.
+            modifier = Modifier.semantics {
+                contentDescription = listOfNotNull(label, description).joinToString(". ")
+            },
             icon = { Icon(icon, contentDescription = null) },
-            text = { Text(label) },
+            text = {
+                if (description == null) {
+                    Text(label)
+                } else {
+                    Column(
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Text(label)
+                        Text(
+                            description,
+                            modifier = Modifier.widthIn(max = MaxDescriptionWidth),
+                            // Balanced, so a wrapped line splits evenly instead of leaving one word
+                            // on its own.
+                            style = MaterialTheme.typography.bodySmall.copy(lineBreak = LineBreak.Paragraph),
+                            color = if (primary) LocalContentColor.current else MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            },
             containerColor = if (primary) {
                 MaterialTheme.colorScheme.primaryContainer
             } else {

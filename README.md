@@ -87,8 +87,8 @@ Two round buttons sit at the bottom of the screen:
   - **Create new game**: opens the game setup screen.
   - **Load a game**: takes over a game that another host handed over (see [Game handover](#game-handover)). Choose **Scan QR code** or **Open a file**, check the game name and start time, then tap **Take over**. If the phone already has a copy of the game, it is replaced.
 - **Share** (grey, bottom left) opens two options:
-  - **Export**: sends finished games to another phone (see [Sharing game history](#sharing-game-history)).
-  - **Import**: receives games another host exported.
+  - **Export**, with the line "Send finished games history to another phone": sends finished games to another phone (see [Sharing game history](#sharing-game-history)).
+  - **Import**, with the line "Add finished games history from other phone": receives games another host exported.
 
 A banner ad is shown at the bottom of the screen.
 
@@ -191,7 +191,7 @@ No server is involved. The data goes straight from one phone to the other.
 
 Moves finished games between phones, for example so that two hosts of the same group have the same history and stats.
 
-- **Export** (Game hub → **Share**): pick **All games** or **Choose games**, then tap **Export N games**. The app shows a QR code, or offers a file when the games do not fit in one code. **Done** closes the screen.
+- **Export** (Game hub → **Share**): a short note at the top says what goes with each game: its players, buy-ins and chip counts, so results and stats match on the other phone. Running games and paid ticks stay on this phone. Pick **All games** or **Choose games**, then tap **Export N games**. The app shows a QR code, or offers a file when the games do not fit in one code. **Done** closes the screen.
 - **Import** (Game hub → **Share**): scan the QR code or open the file. A confirmation says how many games will be imported, how many are already on the phone and will be skipped, and how many new players will join the roster. Players with the same name as someone on the roster are joined to them, so their results add up. Tap **Import**.
 
 ### Players

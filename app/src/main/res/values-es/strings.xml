@@ -633,6 +633,8 @@
     <string name="share_button">Compartir</string>
     <string name="share_import">Importar</string>
     <string name="share_export">Exportar</string>
+    <string name="share_import_hint">Añadir el historial de partidas terminadas de otro teléfono</string>
+    <string name="share_export_hint">Enviar el historial de partidas terminadas a otro teléfono</string>
     <string name="import_title">Importar partidas</string>
     <string name="import_body">Escanea el código QR o abre el archivo que otro anfitrión exportó de su historial.</string>
     <string name="import_confirm_title">¿Importar partidas?</string>
@@ -642,6 +644,7 @@
     <string name="error_import_failed">No se pudieron importar las partidas</string>
     <string name="error_export_failed">No se pudieron preparar las partidas</string>
     <string name="export_title">Exportar partidas</string>
+    <string name="export_intro">Cada partida terminada va con sus jugadores, buy-ins y fichas, así que los resultados y las estadísticas coinciden en el otro teléfono. Las partidas en curso y las marcas de pagado se quedan aquí.</string>
     <string name="export_select_all">Todas las partidas</string>
     <string name="export_selected_of">%1$d de %2$d</string>
     <string name="export_choose">Elige partidas</string>

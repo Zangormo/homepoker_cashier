@@ -173,6 +173,15 @@ private fun GameChoices(
         contentPadding = PaddingValues(16.dp, 8.dp, 16.dp, 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+        // What travels with a game, said once above the list rather than on every card.
+        item(key = "intro") {
+            Text(
+                stringResource(R.string.export_intro),
+                modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 8.dp),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
         item(key = "all") {
             SelectAllRow(state = state, onClick = onToggleAll)
         }
